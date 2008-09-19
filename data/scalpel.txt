@@ -1,0 +1,39 @@
+1: XRumer
+0.2: clickthrgh.asp
+0.3: /affiliate.
+0.1: .info
+0.6: .cn/
+5: EUROBARRE
+5: eurobarre
+2: eurokasa
+3: norbysurf
+0.5: pozycjonowanie stron internetowych
+0.3: /<script.*cookie/
+0.6: /@[a-z0-9.-]+\.(ee|cn)/
+0.3: .txt;
+0.2: /[!.?][a-zA-Z](\r?\n|$)/
+0.2: /@[a-z0-9.-]+\.(ru|ua|info|biz)/
+0.2: <script src="data;
+0.1: /@[a-z0-9-]+\.(biz|info)/
+1: tym szybciej zaczniesz zarabia
+0.4: /zainwest[\S]+ TYLKO \d+\s*Z/
+1: /Multi[ -]?Level[ -]?Marketing|zarabiania w sieci| tajniki zarabiania/
+1: zarobienia prawdziwych pieni
+1: kluczem do zarabiania
+0.7: <div style="overflow: auto; height: 1px;">
+0.4: <Text>
+0.9: /<a href=\s*><\/a>\s*[url=][\/url]/
+0.7: /<a href=\s*><\/a>/
+0.5: [url=][/url]
+0.5: /%5Burl%3D|%3Ca+href/
+0.2: š
+0.2: 
+0.3: š
+0.5: 
+0.5: 
+5: ěčë
+5: íűé
+5: óđŕ
+5: ŕíę
+2: ňĺ
+2: đĺ
