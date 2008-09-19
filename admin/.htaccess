@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteRule !\.(php|html)$ index.php
+</IfModule>
+ErrorDocument 404 index.php
+php_value memory_limit 64M
