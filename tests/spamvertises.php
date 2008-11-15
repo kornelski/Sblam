@@ -25,21 +25,22 @@ class SBlamSpamvertises extends SblamTestPost
 		}
 	}
 
+
 	function testPost(ISblamPost $p)
 	{	
-		d('spamvert test');
 		$uris = $this->extractURIsFromPost($p);
 		return $this->testURIs($uris);
 	}
 	
 	function testURIs(array $uris)
 	{
-		if (!count($uris)) {d('no uris');return NULL;}
+		if (!count($uris)) {return NULL;}
 		
-		list($totalspam, $totalham) = $this->db->getTotalPosts(); if (!$totalham || !$totalspam) {d('DB empty?');return;}
+		list($totalspam, $totalham) = $this->db->getTotalPosts(); if (!$totalham || !$totalspam) {return;}
 		$totalspam /= 10; $totalham /= 10; // totals are too inflated
 		
-		$wordlist = $this->db->getWordList($this->db->hashWords($uris)); if (!$wordlist || !count($wordlist)) {d('nowords');return;}
+		$wordlist = $this->db->getWordList($this->db->hashWords($uris)); if (!$wordlist || !count($wordlist)) {return;}
+		$wordlist = $wordlist->fetchAll(PDO::FETCH_ASSOC);
 		$spamness = 0;
 		$maxspamness = 0;
 		$spampop = 0; $hampop=0;
@@ -52,7 +53,6 @@ class SBlamSpamvertises extends SblamTestPost
 			// and now make it 1-150 with nonlinear skew
 			$spam += 5*sqrt($spam);
 			$ham += 5*sqrt($ham);
-			d("$ham ham vs $spam spam");
 
 			$spampop += max(0,$spam-$ham) * $spam/($ham+$spam) + ($ham<=0.001?min(max(1,$spam/2),3):0);
 			$hampop += max(0,$ham-$spam) * $ham/($ham + 3*$spam);
@@ -63,11 +63,6 @@ class SBlamSpamvertises extends SblamTestPost
 
 		$hampop = max(0, $hampop - $spampop);
 		
-		d($spamness,'spamness');
-		d($maxspamness,'maxspamness');
-		d($spampop,'spampop');
-		d($hampop,'hampop');
-
 		if ($hampop > 1 && $spamness < 0 && $maxspamness < 0.3)
 		{
 			$score = (($spamness - $hampop) / (count($wordlist)+1) * (0.3 - $maxspamness))/3;
@@ -98,14 +93,18 @@ class SBlamSpamvertises extends SblamTestPost
 			try {
 				$this->addURI($parsed, new SblamURI($l));
 			}
-			catch(Exception $e){}
+			catch(Exception $e){warn($e);}
 		}
-		if (count($parsed)) $this->db->add(array_keys($parsed), $isspam, $howmuch);
+		if (count($parsed)) 
+		{
+			return $this->db->add(array_keys($parsed), $isspam, $howmuch);
+	}
+		return false;
 	}
 	
 	function addURI(array &$urls, SblamURI $link, $prefix = '')
 	{	
-	  if ($link->isTLD()) {d($link,"is a tld");return;}
+	  if ($link->isTLD()) {return;}
 	  		  		  
 		if ($hostname = $link->getHostname())
 		{		  
@@ -123,20 +122,24 @@ class SBlamSpamvertises extends SblamTestPost
 				if ($p !== '/')	$urls[$prefix.$hostname . $p] = true;
 			}
 		}
+
 		if (preg_match('!\b(?:site:|https?://)([a-zA-Z0-9.-]+)!',urldecode($link->getPath()),$m))
 		{
-			d($m[1],'found url inside url');		
 			$this->addURI($urls, new SblamURI('http://'.$m[1]), $prefix);
 		}
 	}
 
-	private function getEmailHost(ISBlamPost $p)
+	function addEmail(array &$uris, $email)
 	{
 		// adds e-mail in "@example.com" format.
-		if (($email = $p->getAuthorEmail()) && preg_match('/([^\s:\/#@!;]+)@([a-z0-9.-]+\.[a-z]{2,6})/',strtolower($email),$r))
+		if (preg_match('/([^\s:\/#@!;]+)@([a-z0-9.-]+\.[a-z]{2,6})/',strtolower($email),$r))
 		{
-			 return array(new SblamURI('http://'.$r[2].'/'), $r[1]); // it's a hack to re-use SblamURI logic
+			$r = array(new SblamURI('http://'.$r[2].'/'), $r[1]); // it's a hack to re-use SblamURI logic
+			$this->addURI($uris, $r[0], '@');
+			$this->addURI($uris, $r[0], preg_replace('/\d+/','D',$r[1]).'@');
+			return true;
 		}
+		return false;
 	}
 
 	protected function extractURIsFromPost(ISBlamPost $p)
@@ -150,13 +153,8 @@ class SBlamSpamvertises extends SblamTestPost
 		{
 			$this->addURI($uris,$link);
 		}
-		if ($r = $this->getEmailHost($p))
-		{
-			$this->addURI($uris, $r[0], '@');
-			$this->addURI($uris, $r[0], preg_replace('/\d+/','D',$r[1]).'@');
-		}
+		$this->addEmail($uris, $p->getAuthorEmail());
 	
-		//d($uris,'extracted uris');
 		return array_keys($uris);
 	}
 	

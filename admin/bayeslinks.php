@@ -17,7 +17,16 @@ class BayeslinksPage extends BayesinfoPage
         $spamverts = new SBlamSpamvertises(array());
 
         $linkstoadd = array();
+
+	if (false !== strpos($url,'@'))
+	{
+		d('adding email');
+		$spamverts->addEmail($linkstoadd,$url);
+	}
+	else
+	{
         $spamverts->addURI($linkstoadd, new SblamURI($url),''); // split subdomains, etc.
+	}
         $linkstoadd = array_keys($linkstoadd);
 
         $bayesbase = $this->getBayesStats();

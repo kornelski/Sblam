@@ -1,5 +1,7 @@
 <?php
 
+ini_set("zlib.output_handler",0);
+
 require_once "class/sblam.php";
 require_once "class/sblampost.php";
 require_once "class/sblamtest.php";
@@ -36,23 +38,22 @@ class BayesaddPage extends AdminPage
 				$bayes->addText($_POST['stuff'], $isspam, (int)$_POST['howmuch']);
 			} 			
 						
-			if (preg_match_all('@(?:http://|www\.)([a-z0-9.-]+\.[a-z]{2,4}\b)@',$_POST['stuff'],$links))
+			if (preg_match_all('@(?:https?://|www\.)([a-z0-9.-]+\.[a-z]{2,4}(?:/[^\s]{1,15})?)@',$_POST['stuff'],$links))
 			{
-			  	foreach($links[0] as $l)
-				{
-					$spamverts->addURI($linkstoadd, new SblamURI($l),'');
-				}
-				$linkstoadd = array_keys($linkstoadd);
 
-				$spamverts->addURIs($linkstoadd, $isspam, (int)$_POST['howmuch']);				
-				$spamvertresult = $spamverts->testURIs($linkstoadd);				
+				foreach($links[0] as &$l) if (!preg_match('@^https?://@',$l)) $l = 'http://'.$l;
+
+				$spamverts->addURIs($links[0], $isspam, (int)$_POST['howmuch']);				
+				$spamvertresult = $spamverts->testURIs($links[0]);				
 			}
+			else d("no links found");
 		}
 
-		if (isset($_POST['stuff'])) 
+		if (isset($_POST['stuff']) && $addtext) 
 		{
 			$bayesresult = $bayes->testText($_POST['stuff']);			
 		}
+		else $bayesresult = NULL;
 		
 		return array(
 			'title'=>'Added to bayes base',

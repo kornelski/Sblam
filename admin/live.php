@@ -14,7 +14,6 @@ class LivePage extends AdminPage
 		{						
 		    // MySQL is crap. 
 		    // If I make it a dependent query and try to sort it on database side, all gets copied into temporary tables, even when SQL_SMALL_RESULT is added everywhere
-		    // actually, even if I don't do that, MySQL sometimes randomly decides to copy half million rows just to get 30, yay!
 			$this->prepared = $pdo->prepare("/*maxtime1*/SELECT SQL_SMALL_RESULT
                 posts_meta.id,from_unixtime(`timestamp`) as `time`,
                 COALESCE(NULLIF(dnsrevcache.host,''),inet_ntoa(posts_meta.ip)) as ip,
@@ -22,8 +21,8 @@ class LivePage extends AdminPage
                 concat(posts_data.host,substring(path,1,50)) as path, 
                 concat(round(worktime/1000,1),'s') as work,
                 added,spamreason 
-            FROM posts_meta INNER JOIN posts_data USING(id)
-            LEFT JOIN dnsrevcache USING(ip)
+            FROM posts_meta FORCE INDEX (primary) INNER JOIN posts_data FORCE INDEX (id) USING(id)
+            LEFT JOIN dnsrevcache FORCE INDEX (primary) USING(ip)
             WHERE posts_meta.id >= ?
             ORDER BY posts_meta.id DESC 
             LIMIT 30");

@@ -164,7 +164,9 @@ function spam_init_list(lis, isspam)
       <tal:block tal:condition="php:post.getAuthorURI() or post.getAuthorEmail()">
         (
         <tal:block tal:condition="post/getAuthorURI" tal:content="structure php:PostFormatter::highlight(post.getAuthorURI())"/>
-        <tal:block tal:condition="post/getAuthorEmail"><x tal:replace="'; '" tal:condition="post/getAuthorURI"/> ${structure php:PostFormatter::highlight(post.getAuthorEmail())}</tal:block>
+        <tal:block tal:condition="post/getAuthorEmail"><x tal:replace="'; '" tal:condition="post/getAuthorURI"/> 
+${structure php:PostFormatter::highlight(post.getAuthorEmail())} <a 
+href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</a></tal:block>
         )
       </tal:block>
 

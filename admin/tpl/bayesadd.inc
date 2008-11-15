@@ -15,7 +15,7 @@
 <form action="" method="post">
 	<div><textarea name="stuff" cols="80" rows="25"></textarea></div>
 	<div><label><input type="number" value="50" name="howmuch"/> × number of posts</label></div>
-	<div><label><input type="checkbox" value="nowords"/> only links</label></div>
+	<div><label><input type="checkbox" name="nowords"/> only links</label></div>
 	<div>
 		<input style='color:#060' type="submit" value="ham" name="ham"/>
 		<input style='color:#700' type="submit" value="spam" name="spam"/>

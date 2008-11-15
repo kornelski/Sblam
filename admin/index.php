@@ -81,6 +81,8 @@ class Admin
 		
 		$pagename = array_shift($components); if ($pagename==='') $pagename = 'main';
 		
+		foreach($components as &$c) $c = urldecode($c);
+
 		return array('pagename'=>$pagename, 'args'=>$components);
 	}
 	
@@ -176,6 +178,8 @@ class Admin
 		return $page;
 	}
 }
+
+
 
 
 try 

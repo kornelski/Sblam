@@ -18,8 +18,8 @@ class PlonkerPage extends AdminPage
 	{
 		$pdo = $this->getPDO();
 		
-		$plonkerstats['total'] = $this->q1("SELECT count(*) from plonker",true);
-		$plonkerstats['totalnets'] = $this->q1("SELECT count(distinct ip>>10) from plonker",true);
+		$plonkerstats['total'] = $this->q1("/*maxtime=5*/SELECT count(*) from plonker",true);
+		$plonkerstats['totalnets'] = $this->q1("/*maxtime=10*/SELECT count(distinct ip>>10) from plonker",true);
 		$out = array();
 		foreach($pdo->query("/*maxtime20*/SELECT * from plonker order by spampoints desc,added desc,ip limit 100") as $row)
 		{

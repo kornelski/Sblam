@@ -118,46 +118,46 @@ class BayesStats extends BayesBase
     
     function getRecentlyAddedHams($limit = 30)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where (ham<=2 and spam=0) {$this->extra_where} order by added desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where (ham<=2 and spam=0) {$this->extra_where} order by added desc limit $limit");
     }
     function getRecentlyAddedSpams($limit = 30)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where (spam<=2 and ham=0) {$this->extra_where} order by added desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where (spam<=2 and ham=0) {$this->extra_where} order by added desc limit $limit");
     }
     function getRecentlyModdedWords($limit = 30)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where spam+ham>2 {$this->extra_where} order by added desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where spam+ham>2 {$this->extra_where} order by added desc limit $limit");
     }
 
     function getSpammiestWords($limit = 30, $totalspam, $totalham)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by spam desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by spam desc limit $limit");
     }
 
     function getHammiestWords($limit = 30, $totalspam, $totalham)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by ham desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by ham desc limit $limit");
     }
 
     
     function getCommonWords($limit = 30, $totalspam, $totalham)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by (ham/$totalham+spam/$totalspam) desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by (ham/$totalham+spam/$totalspam) desc limit $limit");
     }
     
     function getUselessWords($limit = 30, $totalspam, $totalham)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by abs(ham/$totalham-spam/$totalspam),spam desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by abs(ham/$totalham-spam/$totalspam),spam desc limit $limit");
     }
     
     function getStrongestWords($limit = 30, $totalspam, $totalham)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by abs(ham/$totalham-spam/$totalspam) desc limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by abs(ham/$totalham-spam/$totalspam) desc limit $limit");
     }
     
     function getOldestWords($limit = 30)
     {
-        return $this->getQueryArray("SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by added limit $limit");
+        return $this->getQueryArray("/*maxtime=20*/SELECT spam,ham,word,hex(s.wordh) as wordh from ".$this->statsTableJoin()." where 1 {$this->extra_where} order by added limit $limit");
     }
     
     function neuterWordHash($hash)
@@ -174,6 +174,7 @@ class BayesStats extends BayesBase
     function banWords(array $words)
     {
         $hashes = $this->hashWords($words,false);
+
         return $this->changeHashes($hashes," ham = 0, spam = spam * 2 + 100000");
     }
     

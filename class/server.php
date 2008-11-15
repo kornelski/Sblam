@@ -15,7 +15,7 @@ class Account
 			return new Account(array('id'=>0,'apikey'=>'default'));
 		}
 		
-		$prep = $db->prepare("SELECT * from accounts where apikeyhash = unhex(?)");
+		$prep = $db->prepare("/*maxtime=2*/SELECT * from accounts where apikeyhash = unhex(?)");
 		if (!$prep || !$prep->execute(array($keyhash)))
 		{
 			throw new ServerException("Awaria bazy kluczy",500);
@@ -165,7 +165,7 @@ class ServerRequest
 		{
 			d('checking for proxies');
 			$db = sblambaseconnect();
-			$prep = $db->prepare("SELECT 1 FROM trustedproxies p JOIN dnscache d ON p.host = d.host WHERE d.ip = ?");		
+			$prep = $db->prepare("/*maxtime=1*/SELECT 1 FROM trustedproxies p JOIN dnscache d ON p.host = d.host WHERE d.ip = ?");		
 			if (!$prep) throw new Exception("b0rked".implode(',',$db->errorInfo()));
 			foreach($out as $ip => $whatever)
 			{

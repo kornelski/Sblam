@@ -1,6 +1,6 @@
 #http://lxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
 #http://spamcheck.freeapp.net/two-level-tlds
-#list of domains that register subdomains and/or have no control over their content
+#list of domains that register subdomains and have no control over their content
 00bp.com
 1talk.net
 2000.hu
@@ -437,6 +437,7 @@ co.tj
 co.tt
 co.tv
 co.tz
+co.ua
 co.ug
 co.uk
 co.us

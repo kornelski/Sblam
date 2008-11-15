@@ -57,8 +57,6 @@ class BayesBase
 		$numwords = count($words); 
 		if (!$numwords) return true;
 
-		d($words,"adding these words as {$howmuch}x ".($isspam?'spam':'ham'));
-
 		$hashes = $this->hashWords($words, true);
 
 		if (!$this->addHashes($hashes,$isspam,$howmuch)) return false;
@@ -94,15 +92,15 @@ class BayesBase
 	function getTotalWords()
 	{
 		$total = $this->db->query("/*maxtime20*/SELECT count(*) as `cnt` from {$this->table}wordsh"); if (!$total) return;
-		$total = $total->fetchAll(PDO::FETCH_ASSOC);  if (!count($total)) {d('total query failed');return;}
+		$total = $total->fetchAll(PDO::FETCH_ASSOC);  if (!count($total)) {return;}
 		return $total[0]['cnt']; 
 	}
 	
 	
 	function getTotalPosts()
 	{
-		$total = $this->db->query("SELECT totalspam,totalham from {$this->table}total"); if (!$total) return;
-		$total = $total->fetchAll(PDO::FETCH_ASSOC); if (!count($total)) {d('total query failed');return;}
+		$total = $this->db->query("/*maxtime=2*/SELECT totalspam,totalham from {$this->table}total"); if (!$total) return;
+		$total = $total->fetchAll(PDO::FETCH_ASSOC); if (!count($total)) {return;}
 		$totalspam = $total[0]['totalspam']; 
 		$totalham = $total[0]['totalham'];
 		return array($totalspam, $totalham);
@@ -110,12 +108,11 @@ class BayesBase
 	
 	function getWordList(array $hashes)
 	{
-		$q = "SELECT hex(wordh) as wordh,spam,ham,flags from {$this->table}wordsh where wordh in (".str_repeat('unhex(?),',count($hashes)-1)."unhex(?))";
+		$q = "/*maxtime=20*/SELECT hex(wordh) as wordh,spam,ham,flags from {$this->table}wordsh where wordh in (".str_repeat('unhex(?),',count($hashes)-1)."unhex(?))";
 		
 		$statement = $this->db->prepare($q);
-		if (!$statement || !$statement->execute($hashes)) {d($hashes,'query failed');return NULL; }
+		if (!$statement || !$statement->execute($hashes)) {return NULL; }
 		
-		//d($statement->rowCount(),"'$q' found this many words out of ".count($hashes));
 		return $statement;
 	}
 	
@@ -138,7 +135,7 @@ class BayesBase
 	{
 		if (isset(self::$dictionary[strtolower($hash)])) return 'h:'.self::$dictionary[strtolower($hash)];
 		
-		$sta = $this->db->prepare("SELECT word FROM {$this->table}translate WHERE wordh=unhex(?) LIMIT 1");
+		$sta = $this->db->prepare("/*maxtime=2*/SELECT word FROM {$this->table}translate WHERE wordh=unhex(?) LIMIT 1");
 
 		if ($sta && $sta->execute(array($hash))) foreach($sta as $word) return 'H:'.$word['word'];
 		return '?'.$hash;
@@ -166,7 +163,7 @@ class BayesBase
 	    $numwords = count($words);
 	    if (!$numwords) return;
 	    
-	    list($totalspam, $totalham) = $this->getTotalPosts(); if (!$totalham || !$totalspam) {d('DB empty?');return;}
+	    list($totalspam, $totalham) = $this->getTotalPosts(); if (!$totalham || !$totalspam) {return;}
 	        	   	    
 		list($fisherspam ,$fisherham, $numfoundwords ) = $this->getWordListFisherSum($this->hashWords($words), $totalspam, $totalham);
                
@@ -195,9 +192,6 @@ class BayesBase
 	
 	function testWords(array $words)
 	{
-        /*
-         * dunno why, but my non-scientific half-guessed method gives slightly better results than the "right way" method (probably a bug/rounding error)
-         */
 	    return $this->testWordsPornelsWay($words);//testWordsChiSquare($words);
     }
     
@@ -206,10 +200,9 @@ class BayesBase
 		$numwords = count($words);
 		if (!$numwords) {return;}
 
-		list($totalspam, $totalham) = $this->getTotalPosts(); if (!$totalham || !$totalspam) {d('DB empty?');return;}
+		list($totalspam, $totalham) = $this->getTotalPosts(); if (!$totalham || !$totalspam) {return;}
 		$totalspam /= 2; $totalham /= 2; // these are too inflated!
 		
-		//d($words,"$numwords words. db posts: $totalspam/$totalham");
 		$wordlist = $this->getWordList($this->hashWords($words)); if (!$wordlist) return;
 		$words=NULL;
 				
@@ -237,7 +230,7 @@ class BayesBase
 
 			$bonus = 2;
 			// extra penalty for very spammy words
-			if ($spam > 7 && $ham < $spam / 11) {/*d($this->hashToWord($r['wordh']),'spamhit!');*/ $ham /= 2; $spam = 150-(150-$spam)*0.8; $bonus += 5;}
+			if ($spam > 7 && $ham < $spam / 11) { $ham /= 2; $spam = 150-(150-$spam)*0.8; $bonus += 5;}
 
 			if ($r['ham']<1 && $r['spam']>20) $bonus += min(10,2+$spam); // totally spammy words
 			if ($r['flags']&1) $bonus += 5 + $bonus/2; // matching phrases is more precise, score higher			
@@ -255,7 +248,6 @@ class BayesBase
 			$judge += $nudge;
 			
 		}
-
 		// numwords is number words in input, realnumwords is number of words in output (sometimes much lower) - have some penalty for unknown words
 		$numwords = ($numwords + $realnumwords)/2;
 		
