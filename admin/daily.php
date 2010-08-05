@@ -4,7 +4,7 @@ class DailyPage extends AdminPage
 {
     function index()
     {
-        $pdo = $this->getPDO();
+        $pdo = $this->services->getDB();
 
         $hours = $pdo->query("/*maxtime=20*/SELECT count(*)/count(distinct day(from_unixtime(`timestamp`))) as cnt,HOUR(from_unixtime(`timestamp`)) as `hour` FROM posts_meta GROUP BY
             HOUR(from_unixtime(`timestamp`)) ORDER BY `hour`")->fetchAll(PDO::FETCH_ASSOC);

@@ -50,7 +50,7 @@ class ScorePage extends AdminPage
 	{
 	    if (isset($_POST['bannedhams']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert/10
+	        $this->services->getDB()->exec("UPDATE posts_meta SET spamcert = spamcert/10
 	            WHERE manualspam is null and spamscore<20
 	                AND exists(SELECT 1 FROM plonker f WHERE f.ip = posts_meta.ip AND spampoints > 10)
 	            LIMIT 200");
@@ -60,11 +60,11 @@ class ScorePage extends AdminPage
 
 	    if (isset($_POST['bannedspams']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
+	        $this->services->getDB()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
 	            AND (spamscore between 250 and 1200)
 	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>100)
 	            LIMIT 2000;");
-            $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
+            $this->services->getDB()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
 	            AND (spamscore > 1200)
 	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip)
 	            LIMIT 4000;");
@@ -73,7 +73,7 @@ class ScorePage extends AdminPage
         }
 	    if (isset($_POST['bannedspamslite']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert + 10 + spamcert/10 WHERE manualspam is null
+	        $this->services->getDB()->exec("UPDATE posts_meta SET spamcert = spamcert + 10 + spamcert/10 WHERE manualspam is null
 	            AND (spamscore between 1 and 1200)
 	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>50)
 	            LIMIT 2000;");

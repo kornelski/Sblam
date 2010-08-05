@@ -5,7 +5,7 @@ class AccsPage extends AdminPage
     function index()
     {
         return array(
-			'accounts'=>$this->getPDO()->query("/*maxtime60*/SELECT account,apikey,accounts.email,
+			'accounts'=>$this->services->getDB()->query("/*maxtime60*/SELECT account,apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
@@ -21,7 +21,7 @@ class AccsPage extends AdminPage
 	function detailed()
 	{
 		return array(
-			'accounts'=>$this->getPDO()->query("/*maxtime360*/SELECT account,apikey,accounts.email,
+			'accounts'=>$this->services->getDB()->query("/*maxtime360*/SELECT account,apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
@@ -40,14 +40,14 @@ class AccsPage extends AdminPage
 	    $acc = intval($acc);
 	    if (!$acc) throw new Exception("Invalid account #");
 
-	    $account = $this->getPDO()->query("SELECT * FROM accounts WHERE id = '$acc'")->fetchAll(PDO::FETCH_ASSOC);
+	    $account = $this->services->getDB()->query("SELECT * FROM accounts WHERE id = '$acc'")->fetchAll(PDO::FETCH_ASSOC);
 	    $account = $account[0];
 	    if ($account['id'] != $acc) throw new Exception("msg to wrong account WTF?");
 
 	    $textarea = '';
 	    if ($msgid = intval($msgid))
 	    {
-	        $textarea = $this->getPDO()->query("SELECT * FROM account_messages WHERE account = '$acc' AND id = '$msgid'")->fetchAll(PDO::FETCH_ASSOC);
+	        $textarea = $this->services->getDB()->query("SELECT * FROM account_messages WHERE account = '$acc' AND id = '$msgid'")->fetchAll(PDO::FETCH_ASSOC);
 	        $textarea = $textarea[0]['message_html'];
 	        $textarea = preg_replace('/(\r?\n)<br \/>/','\1',$textarea);
         }
@@ -56,7 +56,7 @@ class AccsPage extends AdminPage
 	        'textarea' => $textarea,
 	        'msgid' => $msgid,
 	        'account' => $account,
-	        'inbox' => $this->getPDO()->query("SELECT * FROM account_messages WHERE account = '$acc' ORDER BY `read`,`sent`,`type`")->fetchAll(PDO::FETCH_ASSOC),
+	        'inbox' => $this->services->getDB()->query("SELECT * FROM account_messages WHERE account = '$acc' ORDER BY `read`,`sent`,`type`")->fetchAll(PDO::FETCH_ASSOC),
 	        'page_template'=>'accmsg',
 	    );
     }
@@ -68,11 +68,11 @@ class AccsPage extends AdminPage
 
         if (isset($_POST['read']))
         {
-           $this->getPDO()->exec("UPDATE account_messages SET `read` = IF(`read` = 'Y','N','Y') WHERE id = ".intval($_POST['read']));
+           $this->services->getDB()->exec("UPDATE account_messages SET `read` = IF(`read` = 'Y','N','Y') WHERE id = ".intval($_POST['read']));
         }
         else if (isset($_POST['delete']))
         {
-           $this->getPDO()->exec("DELETE FROM account_messages WHERE id = ".intval($_POST['delete']));
+           $this->services->getDB()->exec("DELETE FROM account_messages WHERE id = ".intval($_POST['delete']));
         }
 	    else if (!empty($_POST['msg']))
 	    {
@@ -82,11 +82,11 @@ class AccsPage extends AdminPage
 
 	        if (!empty($_POST['msgid']))
 	        {
-	            $stat = $this->getPDO()->prepareExecute("UPDATE account_messages SET message_html = ? WHERE id = ? AND account = ?",array($_POST['msg'],$_POST['msgid'],$acc));
+	            $stat = $this->services->getDB()->prepareExecute("UPDATE account_messages SET message_html = ? WHERE id = ? AND account = ?",array($_POST['msg'],$_POST['msgid'],$acc));
             }
             else // add
             {
-                $stat = $this->getPDO()->prepareExecute("REPLACE INTO account_messages(account,type,message_html) VALUES(?,?,?)",array($acc,$_POST['type'],$_POST['msg']));
+                $stat = $this->services->getDB()->prepareExecute("REPLACE INTO account_messages(account,type,message_html) VALUES(?,?,?)",array($acc,$_POST['type'],$_POST['msg']));
             }
         }
         return array('redirect'=>"accs/msg/$acc");
@@ -94,7 +94,7 @@ class AccsPage extends AdminPage
 
 	function post_index()
 	{
-		$this->getPDO()->exec("/*maxtime60*/UPDATE accounts SET script='Y' WHERE (script != 'Y' or script is null) and exists(select true from posts_meta join posts_data using(id) where account=accounts.id and spamreason like '%JS challenge%')");
+		$this->services->getDB()->exec("/*maxtime60*/UPDATE accounts SET script='Y' WHERE (script != 'Y' or script is null) and exists(select true from posts_meta join posts_data using(id) where account=accounts.id and spamreason like '%JS challenge%')");
 
 		return $this->index();
 	}

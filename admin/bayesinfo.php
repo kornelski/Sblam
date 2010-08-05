@@ -8,7 +8,7 @@ class BayesinfoPage extends AdminPage
 
     protected function getBayesStats()
     {
-        return new BayesStats($this->getPDO(),$this->prefix);
+        return new BayesStats($this->services->getDB(),$this->prefix);
     }
 
     function index()
@@ -173,9 +173,9 @@ class BayesStats extends BayesBase
     /** no mercy */
     function banWords(array $words)
     {
-        $hashes = $this->hashWords($words,false);
+                    $hashes = $this->hashWords($words,false);
 
-        return $this->changeHashes($hashes," ham = 0, spam = spam * 2 + 100000");
+                    return $this->changeHashes($hashes," ham = 0, spam = spam * 2 + 100000");
     }
 
     private function changeHashes(array $hashes, $algo)

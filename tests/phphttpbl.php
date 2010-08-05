@@ -5,8 +5,10 @@ require_once dirname(__FILE__).'/dnsbl.php';
 class SblamTestPHPHTTPBL extends SblamTestDNSBL
 {
 	protected $key;
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->key = $settings['key'];
 	}
 
@@ -14,6 +16,7 @@ class SblamTestPHPHTTPBL extends SblamTestDNSBL
 	{
 		return preg_replace('!(\d+)\.(\d+)\.(\d+)\.(\d+)!',$this->key.'.\4.\3.\2.\1.dnsbl.httpbl.org',$ip);
 	}
+
 
 	function score($ip, $resip, $reason, $scorefactor)
 	{

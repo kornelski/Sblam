@@ -4,7 +4,7 @@ class StatsPage extends AdminPage
 {
     private function q1($q)
     {
-    	$res = $this->getPDO()->query($q);
+    	$res = $this->services->getDB()->query($q);
     	if (!$res) return NULL;
     	if (!($res = $res->fetchAll(PDO::FETCH_ASSOC))) return NULL;
 
@@ -22,7 +22,7 @@ class StatsPage extends AdminPage
 
     private function speedgraph()
     {
-        $res = $this->getPDO()->query("select count(*) as  cnt , round(avg(worktime)/ 1000,1) as
+        $res = $this->services->getDB()->query("select count(*) as  cnt , round(avg(worktime)/ 1000,1) as
  time , count(if(manualspam=0 or (manualspam is null and spamscore<=0),1,NULL)) as  hams ,
 count(if(manualspam=1 or (manualspam is null and spamscore>0),1,NULL)) as
  spams , ceil(log(worktime)*5 + sqrt(worktime)/100) as  grp  from posts_meta where id > (select max(id) from posts_meta)-15000

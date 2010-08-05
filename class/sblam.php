@@ -2,20 +2,23 @@
 
 require_once "class/interfaces.php";
 
+require_once "class/sblamservices.php";
 require_once "class/sblamtest.php";
 require_once "class/sblamuri.php";
 
 class Sblam implements ISblam
 {
+    protected $services;
 
-	function __construct(array $config)
+	function __construct(array $config, ISblamServices $services)
 	{
+	    $this->services = $services;
 		$this->readConfig($config);
 	}
 
 	protected function readConfig(array $ini)
 	{
-		if (!empty($ini['tlds'])) SblamURI::init($ini['tlds'], sblambaseconnect()); else warn('tlds not given!');
+		if (!empty($ini['tlds'])) SblamURI::init($ini['tlds'], $this->services->getDB()); else warn('tlds not given!');
 		if (!empty($ini['dns'])) AsyncDNS::init(preg_split('![\s,]+!',$ini['dns'],NULL,PREG_SPLIT_NO_EMPTY)); else warn('dns not given!');
 
 		foreach($ini as $name => $settings)
@@ -33,8 +36,7 @@ class Sblam implements ISblam
 				if (!empty($info['remote']) && isset($ini['remote']) && !$ini['remote']) {d($info,'Its a remote service, remote disabled, skipping'); continue;}
 				if (!empty($info['unsupported'])) {d($info,'unsupported in this configuration'); continue;}
 
-				//d($settings,'instantiatin '.$classname);
-				$test = new $classname($settings);
+				$test = new $classname($settings, $this->services);
 
 				if (!$test instanceof ISblamTest) {warn($test,'Not a test');continue;}
 				//d($classname,"instantiated");
@@ -54,7 +56,6 @@ class Sblam implements ISblam
 	function addTest(ISblamTest $t, $phase)
 	{
 		$this->testPhases[$phase][] = $t;
-		$t->setManager($this);
 		d(get_class($t),"added to $phase");
 	}
 

@@ -3,8 +3,10 @@
 class SblamTestNetworks extends SblamTestPost
 {
 	protected $whitelist,$blacklist,$isps;
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$whitelist = isset($settings['whitelist'])?$settings['whitelist']:"pl uk";
 		$blacklist = isset($settings['blacklist'])?$settings['blacklist']:"cn ru ua kr jp ca br hk tw th biz my ni vn mx invalid arpa il info";
 		$isps = @file_get_contents( isset($settings['spamisp'])?$settings['spamisp']:"data/blockisp.txt" );

@@ -41,13 +41,13 @@ class UpdatebayesPage extends AdminPage
 
         $batchsize = max(5,intval($batchsize));
 
-        $pdo = $this->getPDO();
+        $pdo = $this->services->getDB();
         $pdo->exec("truncate bayeswordsh_s");
         $pdo->exec("truncate linkswordsh_s");
 
-        $base = new SBlamBase($pdo);
+        $base = new SblamBase($pdo);
 
-        $bayes = new SblamBayes(array());
+        $bayes = new SblamTestBayes(array(), $this->services);
 
         $done = 0;
         $failures = 0;

@@ -6,12 +6,14 @@ class SblamTestPlonker extends SblamTestPost
 {
 	private $plonker;
 	private $add;
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->add = isset($settings['add'])?$settings['add']:1;
 		$table = (isset($settings['table'])) ? $settings['table'] : 'plonker';
 
-		$this->plonker = new Plonker(sblambaseconnect(), $table);
+		$this->plonker = new Plonker($this->services->getDB(), $table);
 	}
 
 	function testPost(ISblamPost $p)

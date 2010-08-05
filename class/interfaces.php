@@ -1,5 +1,18 @@
 <?php
 
+interface ISblamServices
+{
+    /**
+     * @return PDO
+     */
+    function getDB();
+
+    /**
+     * @return ISblamHttp
+     */
+    function getHTTP();
+}
+
 interface ISblam
 {
 	function testPost(ISblamPost $p);
@@ -114,9 +127,9 @@ interface ISblamTest
 	const CERTAINITY_HIGH = 1;
 	const CERTAINITY_SURE = 2;
 
-	function setManager(ISblam $manager);
-
 	static function info();
+
+	public function __construct(array $settings, ISblamServices $services);
 }
 
 interface ISblamTestPost extends ISblamTest

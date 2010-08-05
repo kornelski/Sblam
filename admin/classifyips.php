@@ -4,7 +4,7 @@ class ClassifyipsPage extends AdminPage
 {
 	function index()
 	{
-		$pdo = $this->getPDO();
+		$pdo = $this->services->getDB();
 		$sblam = $this->getSblam(); // inits urls
 
 		$table = 'plonker'; // FIXME: read config!

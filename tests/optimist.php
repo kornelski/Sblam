@@ -4,8 +4,10 @@ class SblamTestOptimist extends SblamTestPost
 {
 	protected $score;
 
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->score = isset($settings['score']) ? $settings['score'] : -0.35;
 	}
 

@@ -4,8 +4,7 @@ class CleanupPage extends AdminPage
 {
 	function index()
 	{
-
-		$pdo = $this->getPDO();
+		$pdo = $this->services->getDB();
 		$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 		$sblam = $this->getSblam();
 

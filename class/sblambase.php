@@ -118,7 +118,7 @@ class SblamBase
 
 		if ($r['ip']) $heads['REMOTE_ADDR'] = long2ip($r['ip']);
 
-		$post = new SBlamBasePost($r['content'],$r['name'],$r['email'],$r['url'], ServerRequest::getRequestIPs($heads,true));
+		$post = new SblamBasePost($r['content'],$r['name'],$r['email'],$r['url'], ServerRequest::getRequestIPs($heads,true));
 
 		$post->setSpamReason($r['spamreason']);
 		$post->setSpamScore(array($r['spamscore']/100,$r['spamcert']/100));

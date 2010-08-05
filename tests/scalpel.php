@@ -4,8 +4,10 @@ class SblamTestScalpel extends SblamTestPost
 {
 	protected $patterns =array();
 
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+	    parent::__construct($settings, $services);
+
 		$name = empty($settings['patterns'])?'data/scalpel.txt':$settings['patterns'];
 
 		$this->patterns = array();

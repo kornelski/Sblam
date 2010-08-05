@@ -18,8 +18,8 @@ class BayesaddPage extends AdminPage
 	function post_index()
 	{
 		$sblam = $this->getSblam();
-		$bayes = new SblamBayes(array());
-		$spamverts = new SBlamSpamvertises(array());
+		$bayes = new SblamTestBayes(array(), $this->services);
+		$spamverts = new SblamTestSpamvertises(array(), $this->services);
 
 		$isspam = NULL;
 		if (!empty($_POST['ham'])) $isspam = false;

@@ -7,13 +7,15 @@ class SblamTestBayes extends SblamTestPost
 	protected $db;
 	protected $add;
 
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->add = !empty($settings['add']);
 		$tableprefix = !isset($settings['prefix'])?'bayes':$settings['prefix'];
 		$ignorefile = !isset($settings['ignore'])?'data/bayesignore.txt':$settings['ignore'];
 
-		$this->db = new BayesBase(sblambaseconnect(), 	$tableprefix, $ignorefile, $this->add ? 0.2 : 0); // FIXME: hardcoded 0.3
+		$this->db = new BayesBase($this->services->getDB(), $tableprefix, $ignorefile, $this->add ? 0.2 : 0); // FIXME: hardcoded 0.3
 	}
 
 	function reportResult(ISblamPost $p, $score, $cert, $force=false)

@@ -24,24 +24,25 @@ else d('get method');
 class AdminPage
 {
 	private $sblam;
+	protected $services;
+
+	function __construct(ISblamServices $services)
+	{
+	    $this->services = $services;
+    }
+
 	function getSblam()
 	{
 		if (!$this->sblam)
 		{
-			$this->sblam = new Sblam(Server::getDefaultConfig());
+			$this->sblam = new Sblam(Server::getDefaultConfig(), $this->services);
 		}
 		return $this->sblam;
 	}
 
-	function getPDO()
-	{
-		$pdo = sblambaseconnect(); if (!$pdo) throw new Exception("No DB");
-		return $pdo;
-	}
-
 	function getSblamBase()
 	{
-		return new SBlamBase($this->getPDO());
+		return new SblamBase($this->services->getDB());
 	}
 
 	function execute(array $args)
@@ -58,7 +59,7 @@ class AdminPage
 		if (!isset($res['title']))
 		{
 		  $res['title'] = ucwords(preg_replace('/Page$/','',get_class($this)).': '.strtr($method,'_',' '));
-	    }
+	  }
 		return $res;
 	}
 }
@@ -86,13 +87,13 @@ class Admin
 		return array('pagename'=>$pagename, 'args'=>$components);
 	}
 
-	public static function process()
+	public static function process(ISblamServices $services)
 	{
 		$pageinf = self::parseURI($_SERVER['REQUEST_URI']);
 
 		try
 		{
-			$page = self::loadPage($pageinf['pagename']);
+			$page = self::loadPage($pageinf['pagename'], $services);
 
 			$res = $page->execute($pageinf['args']);
 			d($res,'res');
@@ -152,7 +153,7 @@ class Admin
 		}
 	}
 
-	private static function loadPage($name)
+	private static function loadPage($name, ISblamServices $services)
 	{
 		if (!ctype_alnum($name)) throw new Exception("Invalid page name");
 
@@ -171,7 +172,7 @@ class Admin
 		$class = ucfirst($name).'Page';
 		if (!class_exists($class)) throw new Exception("Class $class not found");
 
-		$page = new $class();
+		$page = new $class($services);
 
 		if (!$page instanceof AdminPage) throw new Exception("Not an admin page");
 
@@ -184,7 +185,7 @@ class Admin
 
 try
 {
-	Admin::process();
+	Admin::process(new SblamServices(sblambaseconnect()));
 }
 catch(Exception $e)
 {

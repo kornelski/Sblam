@@ -299,11 +299,12 @@ class ServerRequest
 
 class Server
 {
-	private $db;
+	private $db, $services;
 
-	function __construct(PDO $db)
+	function __construct(ISblamServices $services)
 	{
-		$this->db = $db;
+		$this->db = $services->getDB();
+		$this->services = $services;
 	}
 
 	static function getDefaultConfig($configfile = 'config.ini')
@@ -355,7 +356,7 @@ class Server
 
         $config = $req->customizeConfig(self::getDefaultConfig());
 
-		$sblam = new Sblam($config);
+		$sblam = new Sblam($config, $this->services);
 
 		$rawresult = $sblam->testPost($p);
 		list($score,$cert,$reason) = $rawresult;

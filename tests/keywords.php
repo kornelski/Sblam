@@ -4,8 +4,10 @@ class SblamTestKeywords extends SblamTestPost
 {
 	protected $keywords, $blocklist;
 
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->blocklist = !empty($settings['blocklist2']) ? $settings['blocklist2'] : 'data/blocklist.txt';
 	}
 

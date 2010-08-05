@@ -84,7 +84,7 @@ class MainPage extends AdminPage
     // }}}
     private function getTables()
     {
-        return $this->getPDO()->query("/*maxtime10*/SHOW table status")->fetchAll(PDO::FETCH_ASSOC);
+        return $this->services->getDB()->query("/*maxtime10*/SHOW table status")->fetchAll(PDO::FETCH_ASSOC);
     }
 
     private function getMissingTables(array $has_tables)
@@ -99,7 +99,7 @@ class MainPage extends AdminPage
 
 	function index()
 	{
-		$pdo = $this->getPDO();
+		$pdo = $this->services->getDB();
 
         $tables = $this->getTables();
         $missing = $this->getMissingTables($tables);
@@ -131,7 +131,7 @@ class MainPage extends AdminPage
 
 	private function query1($sql)
 	{
-	    $res = $this->getPDO()->query($sql);
+	    $res = $this->services->getDB()->query($sql);
 	    if (!$res) return NULL;
 	    $res = $res->fetchAll(PDO::FETCH_ASSOC);
 	    return reset($res);
@@ -150,14 +150,16 @@ class MainPage extends AdminPage
         $info = $this->query1("/*maxtime5*/SELECT `timestamp`,added as bayes_added FROM posts_meta WHERE id >= $minid LIMIT 1");
         if (!$info) throw new Exception("Can't find info on oldest post id $minid");
 
-        $moved = $this->getPDO()->exec("/*maxtime710*/INSERT INTO postsarchive(id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies, session,host,hostip,`path`,added,post,chcookie,worktime,account,profiling)
-            SELECT posts_meta.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies,session,host,hostip,`path`, added,post,chcookie,worktime,account,profiling
-                FROM posts_meta LEFT JOIN posts_data ON posts_meta.id = posts_data.id
-                WHERE posts_meta.id < $minid");
+        $moved = $this->services->getDB()->exec("/*maxtime710*/INSERT INTO postsarchive(id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies, session,host,hostip,`path`,added,post,chcookie,worktime,account,profiling)
+            SELECT
+posts_meta$suffix.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies,session,host,hostip,`path`,
+added,post,chcookie,worktime,account,profiling
+                FROM posts_meta$suffix LEFT JOIN posts_data$suffix ON posts_meta$suffix.id = posts_data$suffix.id
+                WHERE posts_meta$suffix.id < $minid");
 
         if ($moved)
         {
-            $this->getPDO()->exec("/*maxtime510*/DELETE FROM posts_meta WHERE id < $minid");
+            $this->services->getDB()->exec("/*maxtime510*/DELETE FROM posts_meta$suffix WHERE id < $minid");
         }
 
         $info['moved'] = $moved;
@@ -190,7 +192,7 @@ class MainPage extends AdminPage
 
         elseif (!empty($_POST['kill']))
         {
-            $this->getPDO()->exec("KILL ".intval($_POST['kill']));
+            $this->services->getDB()->exec("KILL ".intval($_POST['kill']));
 
             return $this->index();
         }
@@ -201,7 +203,7 @@ class MainPage extends AdminPage
 
 	    $tables = $this->getTables();
 	    $missing = $this->getMissingTables($tables);
-	    $pdo = $this->getPDO();
+	    $pdo = $this->services->getDB();
 
 	    foreach($_POST['tables'] as $tab)
 	    {

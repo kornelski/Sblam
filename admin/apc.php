@@ -3,8 +3,9 @@
 class ApcPage extends AdminPage
 {
 
-	function __construct()
+	function __construct(ISblamServices $s)
 	{
+	    parent::__construct($s);
 		if (!function_exists('apc_cache_info')) throw new Exception("APC not installed");
 	}
 

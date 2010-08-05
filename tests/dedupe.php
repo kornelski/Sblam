@@ -3,9 +3,11 @@
 class SblamTestDeDupe extends SblamTestPost
 {
 	protected $db;
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
-		$this->db = sblambaseconnect();
+        parent::__construct($settings, $services);
+
+		$this->db = $this->services->getDB();
 	}
 
 	protected $checksum, $length;

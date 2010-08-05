@@ -8,13 +8,15 @@ class SblamTestSpamvertises extends SblamTestPost
 
 	protected $add;
 
-	function __construct(array $settings)
+	function __construct(array $settings, ISblamServices $services)
 	{
+        parent::__construct($settings, $services);
+
 		$this->add = !empty($settings['add']);
 		$tableprefix = !isset($settings['prefix'])?'links':$settings['prefix'];
 		$ignorefile = !isset($settings['ignore'])?'data/spamvertignore.txt':$settings['ignore'];
 
-		$this->db = new BayesBase(sblambaseconnect(), 	$tableprefix, $ignorefile);
+		$this->db = new BayesBase($this->services->getDB(), 	$tableprefix, $ignorefile);
 	}
 
 	function reportResult(ISblamPost $p, $score, $cert)
@@ -142,7 +144,7 @@ class SblamTestSpamvertises extends SblamTestPost
 		return false;
 	}
 
-	protected function extractURIsFromPost(ISBlamPost $p)
+	protected function extractURIsFromPost(ISblamPost $p)
 	{
 		$uris = array();
 		if ($uri = $p->getAuthorURI())

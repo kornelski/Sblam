@@ -16,7 +16,7 @@ class PlonkerPage extends AdminPage
 
 	function stats()
 	{
-		$pdo = $this->getPDO();
+		$pdo = $this->services->getDB();
 
 		$plonkerstats['total'] = $this->q1("/*maxtime=5*/SELECT count(*) from plonker",true);
 		$plonkerstats['totalnets'] = $this->q1("/*maxtime=10*/SELECT count(distinct ip>>10) from plonker",true);
@@ -48,9 +48,9 @@ class PlonkerPage extends AdminPage
 
 	function blocklist($min = 6500)
 	{
-		$out = "# Spam sources identified by http://sblam.com.\n# Generated ".date('r')."\n";
+		$out = "# Spam sources identified by http://sblam.com.\n# Generated ".date('r')."\n# This is list of comment spammers. Do not use for e-mail blacklists!\n";
 		$n=0;
-		foreach($this->getPDO()->query("/*maxtime20*/SELECT ip from plonker where
+		foreach($this->services->getDB()->query("/*maxtime20*/SELECT ip from plonker where
 ((added > now() - interval 1 month and spampoints > ".intval($min).") or (added > now() - interval 2 month and spampoints > ".intval(15*$min)."))
  and ip > (11<<24) order by ip
 
@@ -100,7 +100,7 @@ class PlonkerPage extends AdminPage
 			$q = "/*maxtime10*/DELETE from plonker where ip in(?".str_repeat(",?", count($ips)-1).")";
 		}
 
-		$pdo = $this->getPDO();
+		$pdo = $this->services->getDB();
 		$prep = $pdo->prepare($q);
 		if (!$prep) throw new Exception("$q ".implode(',',$pdo->errorInfo()));
 
@@ -117,13 +117,13 @@ class PlonkerPage extends AdminPage
 
 	private function increaseCertainityByIP(array $ips)
 	{
-		$this->getPDO()->prepareExecute("UPDATE posts_meta SET spamscore = spamscore + abs(spamscore)/10, spamcert = spamcert + 10 + abs(spamcert)/10 WHERE ip IN(?"
+		$this->services->getDB()->prepareExecute("UPDATE posts_meta SET spamscore = spamscore + abs(spamscore)/10, spamcert = spamcert + 10 + abs(spamcert)/10 WHERE ip IN(?"
 .str_repeat(",?",count($ips)-1).")", $ips);
 	}
 
 	private function q1($query,$firstcol = false)
 	{
-		$res = $this->getPDO()->query($query);
+		$res = $this->services->getDB()->query($query);
 		if ($res) $res = $res->fetchAll(); else throw new Exception("Query $query failed");
 		if ($firstcol) return reset($res[0]);
 		return $res[0];

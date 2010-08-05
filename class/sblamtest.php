@@ -4,11 +4,11 @@ require_once "class/interfaces.php";
 
 abstract class SblamTest
 {
-	protected $manager;
-	function setManager(ISblam $m)
-	{
-		$this->manager = $m;
-	}
+    protected $services;
+    function __construct(array $config, ISblamServices $services)
+    {
+        $this->services = $services;
+    }
 
 	static function info() {return array();}
 }

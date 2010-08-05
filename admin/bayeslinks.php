@@ -14,19 +14,20 @@ class BayeslinksPage extends BayesinfoPage
         // MESS
 
         $this->getSblam(); // init tlds
-        $spamverts = new SBlamSpamvertises(array());
+        $spamverts = new SblamTestSpamvertises(array(), $this->services);
 
         $linkstoadd = array();
 
-	if (false !== strpos($url,'@'))
-	{
-		d('adding email');
-		$spamverts->addEmail($linkstoadd,$url);
-	}
-	else
-	{
-        $spamverts->addURI($linkstoadd, new SblamURI($url),''); // split subdomains, etc.
-	}
+    	if (false !== strpos($url,'@'))
+    	{
+    		d('adding email');
+    		$spamverts->addEmail($linkstoadd,$url);
+    	}
+    	else
+    	{
+        	$spamverts->addURI($linkstoadd, new SblamURI($url),''); // split subdomains, etc.
+    	}
+
         $linkstoadd = array_keys($linkstoadd);
 
         $bayesbase = $this->getBayesStats();

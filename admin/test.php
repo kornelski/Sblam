@@ -24,16 +24,16 @@ class TestPage extends AdminPage
         $config['linksleeve']['enabled'] = '0';
         $config['dupes']['enabled'] = '0';
 
-        $sblam = new Sblam($config);
+        $sblam = new Sblam($config, $this->services);
 
         $num = !empty($_POST['num']) ? intval($_POST['num']) : 100;
-        foreach($this->getPDO()->query("SELECT id FROM posts_meta WHERE spamscore IS NULL and spamcert IS NULL ORDER BY rand() LIMIT
+        foreach($this->services->getDB()->query("SELECT id FROM posts_meta WHERE spamscore IS NULL and spamcert IS NULL ORDER BY rand() LIMIT
 $num")->fetchAll(PDO::FETCH_ASSOC) as $r)
         {
             $score = $sblam->testPost($base->getPostById($r['id']));
 
-        	$this->getPDO()->prepareExecute("UPDATE posts_meta SET spamscore=?,spamcert=? WHERE id=?",array(round($score[0]*100),round($score[1]*100),$r['id']));
-        	$this->getPDO()->prepareExecute("UPDATE posts_data SET spamreason=? WHERE id=?",array($score[2],$r['id']));
+        	$this->services->getDB()->prepareExecute("UPDATE posts_meta SET spamscore=?,spamcert=? WHERE id=?",array(round($score[0]*100),round($score[1]*100),$r['id']));
+        	$this->services->getDB()->prepareExecute("UPDATE posts_data SET spamreason=? WHERE id=?",array($score[2],$r['id']));
         }
     }
 
