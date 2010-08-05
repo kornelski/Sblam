@@ -53,13 +53,14 @@ class SblamTestDeDupe extends SblamTestPost
 			$score = ($res['count'] - $allowed)/15;
 
 			$cert = self::CERTAINITY_LOW;
-			    if ($res['count'] > 100) {$score += 2; $cert = self::CERTAINITY_HIGH;}
-			elseif ($res['count'] > 50) {$score += 0.5; $cert = self::CERTAINITY_HIGH;}
-			elseif ($res['count'] > 10) {$score += 0.2; $cert = self::CERTAINITY_NORMAL;}
+			    if ($res['count'] > 35) {$score += 2; $cert = self::CERTAINITY_HIGH;}
+			elseif ($res['count'] > 20) {$score += 0.8; $cert = self::CERTAINITY_HIGH;}
+			elseif ($res['count'] > 10) {$score += 0.4; $cert = self::CERTAINITY_HIGH;}
+			elseif ($res['count'] > 5) {$score += 0.2; $cert = self::CERTAINITY_NORMAL;}
 
 			$ip = long2ip($res['ip']);
-			if ($ip != $p->getAuthorIP()) $score = ($score+0.2)*1.2; // different IP? botnet!
-			if ($this->length > 250) $score = ($score+0.1)*1.2; // less likely to accidentally dupe
+			if ($ip != $p->getAuthorIP()) $score = ($score+0.3)*1.2; // different IP? botnet!
+			if ($this->length > 250) $score = ($score+0.1)*1.5; // less likely to accidentally dupe
 
 			if ($score > 0.1)
 			{
