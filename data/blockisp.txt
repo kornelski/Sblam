@@ -1,4 +1,7 @@
+#anonymouse.org
+#yahoo.com
 0catch.com
+163data.com.cn
 2dayhost.com
 across.or.jp
 ad.jp
@@ -8,13 +11,15 @@ aprilgroup.ru
 asianet.co.th
 astral.ro
 att.net
+avangarddsl.ru
 bbtec.net
 bezeqint.net
 bhz.virtua.com.br
+bluehost.com
 brasiltelecom.net.br
 broadband.corbina.ru
 bvnet.ro
-camfrog.tc
+camfrog.tc#vps
 charter.com
 cnuninet.com
 codetel.net.do
@@ -24,6 +29,7 @@ cox.net
 ctinets.com
 date.com
 dedibox.fr
+dedibox.fr#vps
 dslextreme.com
 dyn.idknet.com
 eastlink.ca
@@ -50,6 +56,7 @@ hostfresh.com
 hri.net.pk
 identifydns.net
 idknet.com
+infomir.com.ua
 inhoster.com
 insightbb.com
 integratelecom.com
@@ -67,6 +74,8 @@ mail.wcenter.de
 masterhost.ru
 mchsi.com
 megazon.com.br
+moldtelecom.md
+mrse.com.ar
 mtu-net.ru
 mtyxl.axtel.net
 mundo-r.com
@@ -74,6 +83,7 @@ myrdns.com
 mzima.net
 ne.jp
 nephax.net
+netart.pl
 netdominios.com.br
 netvigator.com
 nifty.com
@@ -81,7 +91,7 @@ ntt.ru
 ono.com
 optonline.net
 ovh.net
-ovh.pl
+ovh.pl #vps
 pbh.jp
 ppp.infoweb.ne.jp
 pppoe.mtu-net.ru
@@ -101,14 +111,14 @@ rima-tde.net
 rogers.com
 rosebudsolutions.com
 rr.com
-rzepkamm.com
+rzepkamm.com#vps
 sbc.com
 sbcglobal.net
 seamnetworks.net
 secureix.com
 secureserver.net
 server4you.de
-serveradmin.pl
+serveradmin.pl#vps
 serverflo.com
 sify.net
 sky-vision.net
@@ -117,7 +127,7 @@ speedy.com.ar
 starnet.ru
 static.asianet.co.th
 steephost.com
-superhost.pl
+superhost.pl#vps
 susu.ac.ru
 swbell.net
 telcel.net.ve
@@ -140,7 +150,8 @@ virtua.com.br
 vsnl.net.in
 vsnlinternational.com
 vtr.net
-webfusion.co.uk
+webfusion.co.uk#vps
+webserwer.pl
 wideopenwest.com
 xo.com
 yipes.com
