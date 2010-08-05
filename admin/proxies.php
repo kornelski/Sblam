@@ -6,9 +6,9 @@ class ProxiesPage extends AdminPage
     {
         return array(
             'proxies'=>$this->getPDO()->query("/*maxtime10*/SELECT t.host,count(r.host) as ipcnt FROM trustedproxies t LEFT JOIN dnscache r ON r.host = t.host GROUP BY t.host ORDER BY t.host")->fetchAll(PDO::FETCH_ASSOC),
-        );        
+        );
     }
-    
+
     function post_index()
     {
         if (!empty($_POST['remove']))
@@ -27,7 +27,7 @@ class ProxiesPage extends AdminPage
         }
         return $this->index();
     }
-    
+
     private function lookup(array $hosts)
     {
         $sblam = $this->getSblam(); // init SblamURI
@@ -36,7 +36,7 @@ class ProxiesPage extends AdminPage
             d(SblamURI::gethostbyname($h['host']),$h['host']);
         }
     }
-    
+
     function post_cache()
     {
         switch($_POST['type'])
@@ -49,7 +49,7 @@ class ProxiesPage extends AdminPage
                 break;
             default:
                 $this->lookup($this->getPDO()->query("/*maxtime20*/SELECT t.host FROM trustedproxies t")->fetchAll(PDO::FETCH_ASSOC));
-                break;                
+                break;
         }
         die();
         return array('redirect'=>'proxies');

@@ -38,7 +38,7 @@ class Sblam implements ISblam
 
 				if (!$test instanceof ISblamTest) {warn($test,'Not a test');continue;}
 				//d($classname,"instantiated");
-				$this->addTest($test, isset($settings['phase'])? $settings['phase']:10);				
+				$this->addTest($test, isset($settings['phase'])? $settings['phase']:10);
 			}
 			catch(Exception $e)
 			{
@@ -115,7 +115,7 @@ class Sblam implements ISblam
 		foreach($phaseTests as $test)
 		{
 			if (!$test instanceof ISblamTestPost) continue;
-			
+
 			$start = microtime(true);
 			$test->reportResult($p, $results[0], $results[1], $force);
 			$profiling['rep:'.get_class($test)] = microtime(true) - $start;

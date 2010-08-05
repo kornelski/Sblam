@@ -4,7 +4,7 @@ require_once "interfaces.php";
 require_once "class/sblamuri.php";
 
 class SBlamPost implements ISblamPost
-{	
+{
 	public $bayesadded = false;
 
 	function __construct($rawcontent,$name=NULL,$mail=NULL,$uri=NULL,$ip=NULL)
@@ -14,22 +14,22 @@ class SBlamPost implements ISblamPost
 		$this->headers = $_SERVER;
 		$this->post = $_POST;
 		$this->posttime = time();
-	}	
-	
+	}
+
 	protected $headers;
 	function setHeaders(array $h) {$this->headers = $h;}
 	function getHeaders() {return $this->headers;}
-	
+
 	protected $post;
 	function setPost(array $p) {$this->post = $p;}
 	function getPost() {return $this->post;}
-	
+
 	protected $path;
 	function setPath($p) {$this->path = $p;}
 	function getPath() {return $this->path;}
-	
+
 	private $html,$text,$dom,$links;
-	protected function setRawContent($raw) 
+	protected function setRawContent($raw)
 	{
 		$this->raw = $raw; $this->dom = $this->text = $this->links = NULL;
 	}
@@ -52,7 +52,7 @@ class SBlamPost implements ISblamPost
 		//d($match,'bblink');
 		$this->links[] = new SblamURI($bblink[1],$bblink[2]);
 	}
-	
+
 	function addLink($uri, $label = '')
 	{
 		$this->getLinks(); // prefill links array
@@ -62,7 +62,7 @@ class SBlamPost implements ISblamPost
 	function getLinks()
 	{
 		$seenlinks = array();
-		
+
 		if ($this->links === NULL)
 		{
 			// find all links that are in HTML (DOM should be used to parse according to HTML rules)
@@ -91,7 +91,7 @@ class SBlamPost implements ISblamPost
 			//d($nonlinks,'new text before debb');
 			$this->updateText(preg_replace('!\[url\s*=\s*[\'\"]?((?:https?|www|//)[^]<>\s\'\"]+)\s*\]([^]\[]*?)\[/url\]'.
 			'|\[/?(?:url|b|u|i|quote|color|size|list|img|code|bi|pre|s|attach)(?:=[^\]]{1,12})?\]!is','',$nonlinks));
-	
+
 			// find all links outside HTML
 			if (preg_match_all('!https?://[^\s)#\'"\!]+|\bwww\.(?:[a-z0-9][a-z0-9-]+\.)+[a-z]{2,6}(?:/[^]\[\s()#\'"\!\*]*)?!',$this->getText(),$matches))
 			{
@@ -101,27 +101,27 @@ class SBlamPost implements ISblamPost
 						$this->links[] = new SblamURI($uri);//,'label'=>NULL);
 				}
 			}
-			
+
 			// ignore links pointing to the site itself
 			/*$headers = $this->getHeaders();
 			if (!empty($headers['HTTP_HOST']))
 			{
 				$hosturi = new SblamURI('http://'.$headers['HTTP_HOST'].'/');
 				$domain = $hosturi->getDomain();
-				
+
 				foreach($this->links as $key => $link)
 				{
 					if ($domain === $link->getDomain()) unset($this->links[$key]);
 				}
 			}*/
-			
-			if (($headers = $this->getHeaders()) && !empty($headers['HTTP_HOST']) && 
+
+			if (($headers = $this->getHeaders()) && !empty($headers['HTTP_HOST']) &&
 			    !empty($headers['HTTP_REFERER']) && preg_match('!(?:https?:)?//([^/?#]+)[^\s]*!i',$headers['HTTP_REFERER'],$r))
 			{
 				if (false === strpos($r[1],$headers['HTTP_HOST']))
 				{
 					$this->links[] = new SblamURI($r[0],$headers['HTTP_REFERER']);
-				} 
+				}
 			}
 		}
 		return $this->links;
@@ -134,8 +134,8 @@ class SBlamPost implements ISblamPost
 			if ($origdom = $this->getDOM())
 			{
 				$doc = $origdom->documentElement->cloneNode(true);
-				
-				$temp = array(); 
+
+				$temp = array();
 				foreach($doc->getElementsByTagName('a') as $a) $temp[] = $a; // live collections suck when removing things
 				foreach($temp as $a)
 				{
@@ -146,15 +146,15 @@ class SBlamPost implements ISblamPost
 		}
 		return $this->text;
 	}
-	
+
 	private function updateText($text)
 	{
 		//d($text,"new text!");
 		$this->text = $text;
 	}
-	
+
 	private $authorname,$authormail,$authoruri,$authorips;
-	
+
 	/** @param ip IP either single IP or array of IPs (proxy forwarded hosts). IPs should be in dot notation (11.22.33.44)
 	*/
 	function setAuthor($name,$mail=NULL,$uri=NULL,$ip=NULL)
@@ -162,30 +162,30 @@ class SBlamPost implements ISblamPost
 		if ($ip === NULL) {warn("No ip given for sblampost, taking from env!");$ip = $_SERVER['REMOTE_ADDR'];}
 		else if (is_numeric($ip)) $ip = long2ip($ip);
 		if (!is_array($ip)) $ip = array($ip);
-		
+
 		$this->authorname = $name;
 		$this->authormail = $mail;
 		$this->authoruri = $uri;
 		$this->authorips = $ip;
 	}
-	
+
 	function getAuthorName() {return $this->authorname;}
 	function getAuthorEmail() {return $this->authormail;}
 	function getAuthorURI() {return $this->authoruri !== 'http://'?$this->authoruri:NULL;} /** @todo should check if link looks valid. now just excludes one popular default */
 	function getAuthorIP() {return $this->authorips[0];}
 	function getAuthorIPs() {return $this->authorips;}
-	
+
 	protected $signature;
 	function setSignature($s) {$this->signature = $s;}
 	function getSignature() {return $this->signature;}
-	
+
 	private $dates = array();
 	function getDates() {return $this->dates;}
-	
+
 	protected $posttime;
 	function getPostTime() {return $this->posttime;}
 	function setTime($t) {$this->posttime = $t;}
-	
+
 	protected $serverinstallid;
 	function setInstallId($s) {$this->serverinstallid = $s;}
 	function getInstallId() {return $this->serverinstallid;}
@@ -199,7 +199,7 @@ class SBlamPostAuto extends SBlamPost
 		if ($namefield && isset($_POST[$namefield])) $namefield = $_POST[$namefield];
 		if ($mailfield && isset($_POST[$mailfield])) $mailfield = $_POST[$mailfield];
 		if ($urifield && isset($_POST[$urifield])) $urifield = $_POST[$urifield];
-		
+
 		parent::__construct($contentfield, $namefield, $mailfield, $urifield, ServerRequest::getRequestIPs());
 	}
 }

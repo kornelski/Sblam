@@ -12,8 +12,8 @@ class SBlamLateNight extends SblamTestPost
 			if ($hour >= 1 and $hour <= 7) return array(0.09,self::CERTAINITY_LOW,"Late-night posting ({$hour}h)");
 		}
 	}
-	
-	
+
+
 	static function info()
 	{
 		return array(

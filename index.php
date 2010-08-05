@@ -4,7 +4,7 @@ define("DEBUG",0);
 function d(){}
 function warn($a,$b=NULL){trigger_error(print_r($a,true)." - $b");}
 
-if (!DEBUG) 
+if (!DEBUG)
 {
 	header("Content-Type:text/plain;charset=UTF-8");
 }
@@ -29,7 +29,7 @@ require_once "class/server.php";
 $pdo = sblambaseconnect();
 
 try
-{	
+{
 	$server = new Server($pdo);
 	$server->process(new ServerRequest($pdo));
 }

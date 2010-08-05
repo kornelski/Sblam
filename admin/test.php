@@ -15,52 +15,52 @@ class TestPage extends AdminPage
     }
 
     function post_index()
-    {        
+    {
         $base = $this->getSblamBase();
-        
+
         $config = Server::getDefaultConfig();
-        
+
         $config['throttle']['enabled'] = '0';
         $config['linksleeve']['enabled'] = '0';
-        
+
         $sblam = new Sblam($config);
-        
-        $num = !empty($_POST['num']) ? intval($_POST['num']) : 100;      
-        foreach($this->getPDO()->query("SELECT id FROM posts_meta WHERE spamscore IS NULL and spamcert IS NULL ORDER BY rand() LIMIT 
+
+        $num = !empty($_POST['num']) ? intval($_POST['num']) : 100;
+        foreach($this->getPDO()->query("SELECT id FROM posts_meta WHERE spamscore IS NULL and spamcert IS NULL ORDER BY rand() LIMIT
 $num")->fetchAll(PDO::FETCH_ASSOC) as $r)
         {
             $score = $sblam->testPost($base->getPostById($r['id']));
-            
+
         	$this->getPDO()->prepareExecute("UPDATE posts_meta SET spamscore=?,spamcert=? WHERE id=?",array(round($score[0]*100),round($score[1]*100),$r['id']));
-        	$this->getPDO()->prepareExecute("UPDATE posts_data SET spamreason=? WHERE id=?",array($score[2],$r['id']));        	
+        	$this->getPDO()->prepareExecute("UPDATE posts_data SET spamreason=? WHERE id=?",array($score[2],$r['id']));
         }
     }
-        
+
     function id($id)
     {
         $base = $this->getSblamBase();
         if (!($post = $base->getPostById($id))) throw new Exception("No post $id");
-        
+
         $score = $this->test($post);
         if ($score)
         {
             $post->setSpamScore($score);
             $post->setSpamReason($score[2]);
         }
-        
+
         return array(
             'title'=>'Tested',
             'score'=>$score,
             'post'=>$post,
             );
     }
-        
+
     protected function test(ISblamPost $post)
     {
         $sblam = $this->getSblam();
         $score = $sblam->testPost($post);
         return $score;
     }
-    
+
 }
 

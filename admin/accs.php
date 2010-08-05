@@ -8,12 +8,12 @@ class AccsPage extends AdminPage
 			'accounts'=>$this->getPDO()->query("/*maxtime60*/SELECT account,apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
-				count(if(spamscore<0,1,NULL)) as ham,				
+				count(if(spamscore<0,1,NULL)) as ham,
 				(select count(*) from account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS,
 				(SELECT host from posts_data join posts_meta using(id) where account = accounts.id limit 1) as hosts
-				from posts_meta left join accounts on accounts.id=account group by account order by date desc,cnt")->fetchAll(PDO::FETCH_ASSOC),			
-			'brief'=>true,	
+				from posts_meta left join accounts on accounts.id=account group by account order by date desc,cnt")->fetchAll(PDO::FETCH_ASSOC),
+			'brief'=>true,
 			'title'=>'Accounts (brief)',
 		);
     }
@@ -24,7 +24,7 @@ class AccsPage extends AdminPage
 			'accounts'=>$this->getPDO()->query("/*maxtime360*/SELECT account,apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
-				count(if(spamscore<0,1,NULL)) as ham,				
+				count(if(spamscore<0,1,NULL)) as ham,
 				(select count(*) from account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
 				substring(group_concat(distinct host separator ', '),1,100) as hosts,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS

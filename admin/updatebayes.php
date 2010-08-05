@@ -38,9 +38,9 @@ class UpdatebayesPage extends AdminPage
         $this->ping();
 
         ignore_user_abort(true);
-    
+
         $batchsize = max(5,intval($batchsize));
-    
+
         $pdo = $this->getPDO();
         $pdo->exec("truncate bayeswordsh_s");
         $pdo->exec("truncate linkswordsh_s");
@@ -107,22 +107,22 @@ class UpdatebayesPage extends AdminPage
                 echo "#$done; $failures fail; id{$res['id']}; score {$spamscore} * $howmuch; load {$load}; wait ".round(0.1*$wait,1)."\n<br>"; flush();
                 usleep(100000 * $load);
             }
-        
-            if (!$doneinbatch) 
+
+            if (!$doneinbatch)
             {
                 sleep(5); $maxspam += 40 + $maxspam/10;
                 if ($maxspam > 1500) break;
-            } 
+            }
             else if ($maxspam > 400)
             {
                 $maxspam -= 10;
             }
         }
-    
+
         return array(
-            'done'=>$done, 
-            'failed'=> $failures, 
-            'waited'=>round(0.1*$wait), 
+            'done'=>$done,
+            'failed'=> $failures,
+            'waited'=>round(0.1*$wait),
             'waitperpost' => round(0.1*$wait/($done),2)
         );
     }

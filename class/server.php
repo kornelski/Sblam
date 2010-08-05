@@ -11,10 +11,10 @@ class Account
     static function fromApiKeyHash(PDO $db, $keyhash)
 	{
 		if ($keyhash == md5("^&$@$2\ndefault@@"))
-		{			
+		{
 			return new Account(array('id'=>0,'apikey'=>'default'));
 		}
-		
+
 		$prep = $db->prepare("/*maxtime=2*/SELECT * from accounts where apikeyhash = unhex(?)");
 		if (!$prep || !$prep->execute(array($keyhash)))
 		{
@@ -22,15 +22,15 @@ class Account
 		}
 		elseif (!($q = $prep->fetchAll(PDO::FETCH_ASSOC)) || !($q = reset($q)))
 		{
-			throw new ServerException("Niepoprawny klucz API",403);		
+			throw new ServerException("Niepoprawny klucz API",403);
 		}
-		
+
 		return new Account($q);
 	}
-	
-    
+
+
 	public $id,$apikey;
-	
+
 	protected function __construct(array $fields)
 	{
 		foreach($fields as $k => $v)
@@ -38,7 +38,7 @@ class Account
 			$this->$k = $v;
 		}
 	}
-	
+
 	function isDefaultAccount()
 	{
 		return $this->apikey == 'default';
@@ -48,34 +48,34 @@ class Account
 class ServerRequest
 {
 	private $db, $account, $data, $ips, $stored_id = 1;
-	
+
 	function __construct(PDO $db, $datasourcepath = 'php://input')
-	{		
-		$this->db = $db; 
+	{
+		$this->db = $db;
 		$this->data = $this->convertToArray($this->decodeData(file_get_contents($datasourcepath)));
 		$this->normalizeData();
 	}
-	
+
 	private function decodeData($data)
 	{
 		if (empty($_SERVER['CONTENT_TYPE']) || !preg_match('!^application/x-sblam\s*;\s*sig\s*=\s*([a-z0-9]{32})([a-z0-9]{32})(\s*;\s*compress\s*=\s*gzip)?\s*$!i',$_SERVER['CONTENT_TYPE'],$res))
 		{
 			throw new Exception("Niepoprawne zapytanie",400);
 		}
-		
+
 		$compressed = !empty($res[3]);
 		$keyhash = $res[1];
-		$sig = $res[2];	
-		
+		$sig = $res[2];
+
 		$this->account = Account::fromApiKeyHash($this->db,$keyhash);
-		
+
 		if (md5($this->account->apikey . $data) !== $sig)
 		{
 			throw new Exception("Niepoprawny podpis danych lub dane uszkodzone podczas transferu",403);
 		}
 
         if ($compressed) $data = gzuncompress($data,300000);
-        
+
         return $data;
 	}
 
@@ -100,7 +100,7 @@ class ServerRequest
 		$dat = strtr($conv,array(		'ą'=>'ą',		'ę'=>'ę',		'ó'=>'ó',		'ż'=>'ż',		'ś'=>'ś',		'ć'=>'ć',		'ź'=>'ź',		'ń'=>'ń',	'Ą'=>'Ą',		'Ę'=>'Ę',		'Ó'=>'Ó',		'Ż'=>'Ż',		'Ś'=>'Ś',		'Ć'=>'Ć',		'Ź'=>'Ź',		'Ń'=>'Ń' ));
 
 		$dat = explode("\0",$dat);
-		
+
 		$cnt = count($dat);
 		$fields = array();
 		for($i=1; $i < $cnt; $i+=2)
@@ -109,18 +109,18 @@ class ServerRequest
 		}
 		return $fields;
 	}
-	
+
 	private function normalizeData()
 	{
-		if (!isset($this->data['HTTP_HOST'])) $this->data['HTTP_HOST'] = $this->data['host'];		
+		if (!isset($this->data['HTTP_HOST'])) $this->data['HTTP_HOST'] = $this->data['host'];
 		$this->data['REMOTE_ADDR'] = $this->data['ip'];
-				
+
 		$this->ips = self::getRequestIPs($this->data, true);
-		if (!count($this->ips)) $this->ips = array($this->data['ip']);				
+		if (!count($this->ips)) $this->ips = array($this->data['ip']);
 	}
-	
-	/** extract all IPs from request headers 
-	
+
+	/** extract all IPs from request headers
+
 		@param headers $_SERVER array
 		@return array
 	*/
@@ -128,13 +128,13 @@ class ServerRequest
 	{
 		if (NULL === $headers) $headers = $_SERVER;
 		if (!isset($headers['REMOTE_ADDR'])) $headers['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
-		
+
 		$out = array($headers['REMOTE_ADDR']=>true);
-		
+
 		// order IS important for security
-		$search = array('X_FORWARDED_FOR','FORWARDED_FOR','CLIENT_IP','X_CLIENT_IP', 
+		$search = array('X_FORWARDED_FOR','FORWARDED_FOR','CLIENT_IP','X_CLIENT_IP',
 		'X_CLUSTER_CLIENT_IP','X_FORWARDED','PC_REMOTE_ADDR','FORWARDED','X_WAP_CLIENT_IP','X_COMING_FROM','X_REAL_IP');
-		
+
 		foreach($search as $h)
 		{
 			$h = 'HTTP_'.$h;
@@ -143,11 +143,11 @@ class ServerRequest
 				foreach($t[0] as $ip) if (!isset($out[$ip])) $out[$ip] = true;
 			}
 		}
-		
+
 		if (1||!function_exists('filter_var')) foreach($out as $ip => $whatever)
 		{
 			$ipn = ip2long($ip);
-			if (!$ipn || $ip === '127.0.0.1' || ($ipn&0xC0000000) === 0xC0000000 || (($ipn>>24)&0xFF)===10 || (($ipn>>24)&0xFF)===192 || $ip === $_SERVER['SERVER_ADDR']) 
+			if (!$ipn || $ip === '127.0.0.1' || ($ipn&0xC0000000) === 0xC0000000 || (($ipn>>24)&0xFF)===10 || (($ipn>>24)&0xFF)===192 || $ip === $_SERVER['SERVER_ADDR'])
 			{
 				//d($ip,'Unroutable IP - dropping');
 				unset($out[$ip]);
@@ -160,17 +160,17 @@ class ServerRequest
 				unset($out[$ip]);d($ip,"PHP says this IP is crap");
 			}
 		}
-	
+
 		if (count($out)>1)
 		{
 			d('checking for proxies');
 			$db = sblambaseconnect();
-			$prep = $db->prepare("/*maxtime=1*/SELECT 1 FROM trustedproxies p JOIN dnscache d ON p.host = d.host WHERE d.ip = ?");		
+			$prep = $db->prepare("/*maxtime=1*/SELECT 1 FROM trustedproxies p JOIN dnscache d ON p.host = d.host WHERE d.ip = ?");
 			if (!$prep) throw new Exception("b0rked".implode(',',$db->errorInfo()));
 			foreach($out as $ip => $whatever)
 			{
 				if (!$prep->execute(array(sprintf("%u",ip2long($ip))))) throw new Exception("bork".implode($prep->errorInfo()));
-				if (count($prep->fetchAll())) 
+				if (count($prep->fetchAll()))
 				{
 					d($ip,'found to be a trusted proxy');
 					unset($out[$ip]);
@@ -181,7 +181,7 @@ class ServerRequest
 					break;
 				}
 			}
-		}		
+		}
 		return array_keys($out);
 	}
 
@@ -189,12 +189,12 @@ class ServerRequest
 	{
 		return $this->data;
 	}
-	
+
 	function getIPs()
 	{
 	    return $this->ips;
     }
-	
+
 	function isDefaultAccount() {return $this->account->isDefaultAccount();}
 
     function customizeConfig(array $config)
@@ -215,7 +215,7 @@ class ServerRequest
 		echo $n;
 		@ob_flush();flush();
 	}
-		
+
 	private function insertArray($table,array $out)
 	{
 	    $q = "INSERT into $table (".implode(',',array_keys($out)).") values(?".str_repeat(",?",count($out)-1).")";
@@ -223,12 +223,12 @@ class ServerRequest
 		if (!$pre) return NULL;
 		return $pre->execute(array_values($out));
     }
-	
+
 	function getStoredId()
 	{
 	    return $this->stored_id;
     }
-	
+
 	function storeData(SblamPost $sblampost)
 	{
 		$heads = '';
@@ -245,7 +245,7 @@ class ServerRequest
         $this->db->beginTransaction();
         try
         {
-            $out = array(    			
+            $out = array(
     			'ip'=>sprintf("%u",ip2long($this->data['ip'])),
     			'timestamp'=>$this->data['time'],
     			'account'=>$this->account->id,
@@ -267,9 +267,9 @@ class ServerRequest
 		        'host'=> preg_replace('!^(?:www\.)?([^/:]*).*$!','\1',$this->data['host']),
     			'hostip'=>sprintf("%u",ip2long($_SERVER['REMOTE_ADDR'])),
     			'path'=>$this->data['uri'],
-    			'post'=>$post,    			
+    			'post'=>$post,
     		);
-		    
+
 		    $this->insertArray('posts_data',$out);
 		    $this->db->commit();
 		    return true;
@@ -278,15 +278,15 @@ class ServerRequest
 	    {
 	        $this->db->rollback();
 	        throw $e;
-        }				
+        }
 	}
 
 	function storeResult($score, $cert, $reason, $worktime, $added, $profilingres = NULL)
-	{	    
+	{
     	$q = "UPDATE posts_meta set spamscore=?,spamcert=?,worktime=?,added=? where id=?";
 		$pre = $this->db->prepare($q);
 		if (!$pre || !$pre->execute(array(round($score*100), round($cert*100),  round($worktime*1000), $added, $this->stored_id))) return false;
-	
+
 
   		$q = "UPDATE posts_data set spamreason=?,profiling=? WHERE id=?";
 		$pre = $this->db->prepare($q);
@@ -300,27 +300,27 @@ class ServerRequest
 class Server
 {
 	private $db;
-	
+
 	function __construct(PDO $db)
 	{
-		$this->db = $db; 
+		$this->db = $db;
 	}
-	
+
 	static function getDefaultConfig($configfile = 'config.ini')
     {
-    	$ini = @parse_ini_file($configfile,true); 
+    	$ini = @parse_ini_file($configfile,true);
     	if (!$ini) throw new Exception("Unable to read config file $configfile");
-    	return $ini;	
-    }    
-    
+    	return $ini;
+    }
+
 	function process(ServerRequest $req)
 	{
 	    $starttime = microtime(true);
-	    
+
 		$data = $req->getData();
-		
+
 		if ($data['ip'] == '127.0.0.1' && $req->isDefaultAccount())
-		{			
+		{
 			throw new ServerException('Brak klucza API',403);
 		}
 
@@ -337,7 +337,7 @@ class Server
 		}
 
 		list($content, $author, $email, $url) = $this->findFields($postdata, $fs);
-		
+
 
 		/* short-circuit filtering for testing */
 		if (preg_match('!^[^a-z]*to\s+jest\s+test\s+(sblam|spam)[ua]?[^a-z]*$!i',$content))
@@ -347,7 +347,7 @@ class Server
 		}
 
         $p = $this->postFromFields($data, $postdata, $content, $author, $email, $url, $req->getIPs());
-        
+
 		if (!$req->storeData($p))
 		{
 			dieerr(500,"Awaria bazy danych");
@@ -366,17 +366,17 @@ class Server
 		{
 			$req->returnResult( ($score>0)?1:-1 );
 		}
-		else 
+		else
 		{
 			$req->returnResult( ($score>0)?2:-2 );
 		}
 
 		set_time_limit(25);
 		$rawresult = $sblam->reportResult($p, $rawresult);
-		
+
         $req->storeResult($score, $cert, $reason, $endtime - $starttime, empty($p->bayesadded)?0:6, isset($rawresult[3]) ? Sblam::formatProfiling($rawresult[3]) : '');
 	}
-	
+
 	private function postFromFields(array $data, array $postdata, $content, $author, $email, $url, $ips)
 	{
 		$p = new SblamPost($content, $author, $email, $url, $ips);
@@ -387,7 +387,7 @@ class Server
 		$p->setInstallId($data['uid']);
 		return $p;
 	}
-	
+
 	/** find which fields contain msg/author/e-mail */
 	private function findFields(array &$postdata, array $fs)
 	{
@@ -414,7 +414,7 @@ class Server
 		$extradata = '';
 		foreach($postdata as $key => $extra)
 		{
-			if ((preg_match('![^ ] |<|&lt|http://!i',$extra) || strlen($extra)>12 || preg_match('!^(?:aim|msn|yim|location|occupation|interests|signature)$!',$key)) 
+			if ((preg_match('![^ ] |<|&lt|http://!i',$extra) || strlen($extra)>12 || preg_match('!^(?:aim|msn|yim|location|occupation|interests|signature)$!',$key))
 			&& !preg_match('!submit|password|haslo|preview|key$|id$|^pass|token|bbcode|^sess|dateformat|mode$|helpbox|topic|click|attach|akcja|return|^sc\d+$!',$key))
 				$extradata .= "\n[:".substr($key,0,2).":] ".$extra;
 		}
@@ -436,7 +436,7 @@ class Server
 
 		return array($content, $author, $email, $url);
 	}
-	
+
 	private function findField(array &$postdata, array $names, array $prefixes)
 	{
 		foreach($prefixes as $prefix)
@@ -444,7 +444,7 @@ class Server
 			foreach($names as $name)
 			{
 				if ($name === NULL) continue;
-				if (array_key_exists($prefix.$name,$postdata)) 
+				if (array_key_exists($prefix.$name,$postdata))
 				{
 				//	d("found data in $prefix.$name");
 					$res = $postdata[$prefix.$name];

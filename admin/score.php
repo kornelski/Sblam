@@ -27,17 +27,17 @@ class ScorePage extends AdminPage
 
 	function index($maxposts = 10)
 	{
-		$base = $this->getSblamBase();		
-		
+		$base = $this->getSblamBase();
+
 		$spamqueue = array('spams'=>array(), 'hams'=>array(), 'page_template'=>'score','title'=>"Moderation");
 
-		if ($posts = $this->getUnmoderatedRange($base,false,0,$maxposts)) 
+		if ($posts = $this->getUnmoderatedRange($base,false,0,$maxposts))
 		{
 			$this->queue_prefetch($posts);
 			$spamqueue['hams'] = $posts;
 		}
 
-		if ($posts = $this->getUnmoderatedRange($base,true,0,$maxposts)) 
+		if ($posts = $this->getUnmoderatedRange($base,true,0,$maxposts))
 		{
 			$this->queue_prefetch($posts);
 			$spamqueue['spams'] = $posts;
@@ -45,42 +45,42 @@ class ScorePage extends AdminPage
 
 		return $spamqueue;
 	}
-	
+
 	function post_index()
 	{
 	    if (isset($_POST['bannedhams']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert/10 
-	            WHERE manualspam is null and spamscore<20 
-	                AND exists(SELECT 1 FROM plonker f WHERE f.ip = posts_meta.ip AND spampoints > 10) 
+	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert/10
+	            WHERE manualspam is null and spamscore<20
+	                AND exists(SELECT 1 FROM plonker f WHERE f.ip = posts_meta.ip AND spampoints > 10)
 	            LIMIT 200");
-	            
+
 	        return array('redirect'=>'score');
         }
-        
+
 	    if (isset($_POST['bannedspams']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null 
-	            AND (spamscore between 250 and 1200) 
-	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>100) 
+	        $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
+	            AND (spamscore between 250 and 1200)
+	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>100)
 	            LIMIT 2000;");
-            $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null 
-	            AND (spamscore > 1200) 
-	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip) 
-	            LIMIT 4000;");	            
-	            
+            $this->getPDO()->exec("UPDATE posts_meta SET manualspam=1 WHERE manualspam is null
+	            AND (spamscore > 1200)
+	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip)
+	            LIMIT 4000;");
+
 	        return array('redirect'=>'score');
-        }        
+        }
 	    if (isset($_POST['bannedspamslite']))
 	    {
-	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert + 10 + spamcert/10 WHERE manualspam is null 
-	            AND (spamscore between 1 and 1200) 
-	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>50) 
+	        $this->getPDO()->exec("UPDATE posts_meta SET spamcert = spamcert + 10 + spamcert/10 WHERE manualspam is null
+	            AND (spamscore between 1 and 1200)
+	            AND exists(SELECT 1 from plonker f WHERE f.ip = posts_meta.ip and spampoints>50)
 	            LIMIT 2000;");
-	            
+
 	        return array('redirect'=>'score');
-		}        
-        
+		}
+
 	    return $this->score($_POST['id'],isset($_POST['spam']));
 	}
 
@@ -88,26 +88,26 @@ class ScorePage extends AdminPage
 	{
 		return $this->score($id,false, $list,$count);
 	}
-	
+
 	function post_spam($id, $list, $count = 1)
 	{
 		return $this->score($id,true, $list,$count);
 	}
 
 	protected function score($id, $isspam, $list = NULL, $count = 1)
-	{	
+	{
 		$sbl = $this->getSblam();
 		$base = $this->getSblamBase();
-		
+
 		$base->moderated($id, $isspam);
 		$post = $base->getPostById($id);
-		
+
 		if ($post)
-		{	
+		{
 			list($score) = $post->getSpamScore();
-			
+
 			if (!$post->bayesadded || (!$isspam && $score > 0) || ($isspam && $score < 0))
-			{					
+			{
 				$sbl->reportResult($post, array($isspam?2:-2, 1, "moderated"), true);
 				if ($post->bayesadded)
 				{
@@ -115,17 +115,17 @@ class ScorePage extends AdminPage
 				}
 			}
 		}
-		
+
 		if ($list !== NULL)
 		{
   		$spam = $this->getUnmoderatedRange($base,$list == 'spam', 10, $count);
   		if (!$spam) throw new Exception("No posts");
 
-		  return array('posts'=>$spam, 'page_template'=>'scorexml','content_type'=>'text/xml', 'layout_template'=>'');	
+		  return array('posts'=>$spam, 'page_template'=>'scorexml','content_type'=>'text/xml', 'layout_template'=>'');
 	  }
 	  return $this->index(2);
 	}
-	
+
 
     private function queue_prefetch(array $spams)
     {

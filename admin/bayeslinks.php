@@ -6,14 +6,14 @@ require "admin/bayesinfo.php";
 class BayeslinksPage extends BayesinfoPage
 {
     protected $prefix = 'links';
-    
+
     function kill($url)
     {
         if (!preg_match('!^(https?:)?//!i',$url)) $url = 'http://'.$url;
-        
+
         // MESS
-        
-        $this->getSblam(); // init tlds     
+
+        $this->getSblam(); // init tlds
         $spamverts = new SBlamSpamvertises(array());
 
         $linkstoadd = array();
@@ -35,7 +35,7 @@ class BayeslinksPage extends BayesinfoPage
             'title'=>'Banned domains',
             'result'=>$bayesbase->banWords($linkstoadd),
             'linksadded'=>$linkstoadd,
-        );      
+        );
         return $res;
     }
 }

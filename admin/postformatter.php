@@ -20,7 +20,7 @@ class PostFormatter
     	for($i=1; $i < count($parts); $i += 2)
     	{
     		$out .= preg_replace('!([^<>&\s/-]{10})([^<>&\s/-]{10})!','\1­\2',self::highlight_text($parts[$i-1]));
-    		if (strlen($parts[$i])) $out .= '<a href="http://'.htmlspecialchars($parts[$i]).'"><span 
+    		if (strlen($parts[$i])) $out .= '<a href="http://'.htmlspecialchars($parts[$i]).'"><span
 style="display:inline-block;width:0;overflow:hidden">http://</span>'.
 preg_replace('!([^<>&\s/-]{10})([^<>&\s/-]{10})!','\1­\2',self::highlight_text(substr(urldecode($parts[$i]),0,100))).'</a> <a class="kill" href="/admin/bayeslinks/kill/'.urlencode($parts[$i]).'">&#x2620;</a>';
     	}
@@ -40,7 +40,7 @@ preg_replace('!([^<>&\s/-]{10})([^<>&\s/-]{10})!','\1­\2',self::highlight_text(
     	}
     	return $out;
     }
-    
+
     static function formatreason($reason)
     {
         $reason = htmlspecialchars($reason);

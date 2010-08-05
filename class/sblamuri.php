@@ -16,7 +16,7 @@ class SblamURI
 		self::$tlds = new DomainMatch($tldsfile);
 		self::$db = $db;
 		if (!$db) warn("No cache");
-		
+
 		self::$useasync = AsyncDNS::supported();
 	}
 
@@ -119,7 +119,7 @@ class SblamURI
 	{
 		$host = $this->getHostname();
 
-	  $level = $this->getLevel($host);	  
+	  $level = $this->getLevel($host);
 	  if ($level === NULL) return NULL;
 
 		$host = implode('.',array_slice(explode('.',$host), -$level, $level));
@@ -219,9 +219,9 @@ class SblamURI
 	private static function savebynamecache($ips,$host)
 	{
 		if (!self::$db) return;
-		
+
 		$host = addslashes(strtolower($host));
-		
+
 		d($ips,"Saving resolution of $host");
 
 		if (!$ips || !count($ips))
@@ -238,7 +238,7 @@ class SblamURI
 	{
 		if (!self::$db) return;
 		d("Saving resolution of $ip -> $host");
-		
+
 		if (is_array($host)) $host = reset($host);
 
 		if (!self::$db->exec(sprintf("/*maxtime10*/REPLACE INTO dnsrevcache (ip,host) VALUES('%u','%s')",ip2long($ip),addslashes(strtolower($host))))) warn(self::$db->errorInfo());

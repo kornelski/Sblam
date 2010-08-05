@@ -5,7 +5,7 @@ class SblamSurbl extends SblamTestPost
 	function preTestPost(ISblamPost $p)
 	{
 		$this->addedhosts = array();
-		
+
 		$links = $p->getLinks();
 		if ($links) foreach($links as $link)
 		{
@@ -13,12 +13,12 @@ class SblamSurbl extends SblamTestPost
 			if ($domain = $link->getDomain()) $this->checkHost($domain);
 		}
 	}
-	
+
 	function testPost(ISblamPost $p)
-	{	
+	{
 		return $this->getCheckHostResults();
 	}
-	
+
 	protected $addedhosts;
 	function checkHost($host)
 	{
@@ -27,20 +27,20 @@ class SblamSurbl extends SblamTestPost
 		{
 			$host = $m[1];
 		}
-		
+
 		if (isset($this->addedhosts[$host])) return;
 		$this->addedhosts[$host] = true;
-		
+
  		SblamURI::gethostbynameasync($host . '.multi.surbl.org');
 	}
-	
+
 	function getCheckHostResults()
 	{
 		$score=0;
 		foreach($this->addedhosts as $host => $whatever)
 		{
 			$host .= '.multi.surbl.org';
-			
+
 			$res = SblamURI::gethostbynamel($host);
 			if ($res && count($res))
 			{
@@ -60,13 +60,13 @@ class SblamSurbl extends SblamTestPost
 				d("total surbl score until now is $score");
 			} else d("$host not listed $res");
 		}
-		
+
 		$finalscore = min(0.4 + $score/18, 1.5);
-		
+
 		if ($score) return array($finalscore, ($score >= 13)?self::CERTAINITY_HIGH:self::CERTAINITY_NORMAL,"Linked sites in SURBL (".round($finalscore,1)." = $score)");
 		return NULL;
 	}
-	
+
 	static function info()
 	{
 		return array(

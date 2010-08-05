@@ -5,20 +5,20 @@ class CleanupPage extends AdminPage
 	function index()
 	{
 	    $plonkertable = 'plonker';
-	    
+
 		$pdo = $this->getPDO();
 		$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
 		$sblam = $this->getSblam();
-		
+
 		$pdo->exec("/*maxtime15*/DELETE from dupes where expires < unix_timestamp(now())");
 
 		$pdo->exec("TRUNCATE bayeswordsh_s");
 		$pdo->exec("TRUNCATE linkswordsh_s");
 
-		$pdo->exec("/*maxtime15*/UPDATE {$plonkertable} f join dnscache d on f.ip=d.ip left join trustedproxies t on t.host=d.host 
-		set f.added=f.added,f.spampoints = f.spampoints/2 where 
+		$pdo->exec("/*maxtime15*/UPDATE {$plonkertable} f join dnscache d on f.ip=d.ip left join trustedproxies t on t.host=d.host
+		set f.added=f.added,f.spampoints = f.spampoints/2 where
 		d.host like '%.adsl.tpnet.pl' or
-		d.host like '%.dialog.net.pl' or 
+		d.host like '%.dialog.net.pl' or
 		d.host like '%.chello.pl' or
 		d.host like '%.unregistered.net.telenergo.pl' or
 		t.host is not null
@@ -47,7 +47,7 @@ class CleanupPage extends AdminPage
 		}
 
 /*
-		set @minid = least((select id-40000 from posts_meta order by id desc limit 1),(select id+5000 from posts_meta order by id limit 1)); insert into posts_archive 
+		set @minid = least((select id-40000 from posts_meta order by id desc limit 1),(select id+5000 from posts_meta order by id limit 1)); insert into posts_archive
 		select * from posts_meta left join posts_data on posts_meta.id = posts_data.id where posts_meta.id < @minid; delete from posts_meta where id < @minid;
 */
 

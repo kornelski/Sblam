@@ -20,13 +20,13 @@ function sblambaseconnect()
 {
 	static $pdo;
 	$max=10;
-	
-	while(!$pdo && $max--) 
+
+	while(!$pdo && $max--)
 	{
 		try {
 			$pdo = new SblamPDO("mysql:host=".SBLAMDB_HOST.";dbname=".SBLAMDB_BASE,SBLAMDB_USER,SBLAMDB_PASS);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$pdo->query("SET NAMES utf8");			
+			$pdo->query("SET NAMES utf8");
 		}
 		catch(Exception $e)
 		{

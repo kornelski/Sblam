@@ -5,40 +5,40 @@ require_once "class/bayesbase.php";
 class SBlamSpamvertises extends SblamTestPost
 {
 	protected $db;
-	
+
 	protected $add;
-	
+
 	function __construct(array $settings)
 	{
 		$this->add = !empty($settings['add']);
 		$tableprefix = !isset($settings['prefix'])?'links':$settings['prefix'];
 		$ignorefile = !isset($settings['ignore'])?'data/spamvertignore.txt':$settings['ignore'];
-				
+
 		$this->db = new BayesBase(sblambaseconnect(), 	$tableprefix, $ignorefile);
 	}
-	
+
 	function reportResult(ISblamPost $p, $score, $cert)
 	{
 		if ($this->add && abs($score) > 0.6 && $cert > 0.8)//0.81)
 		{
-			$this->addPost($p, $score > 0); 
+			$this->addPost($p, $score > 0);
 		}
 	}
 
 
 	function testPost(ISblamPost $p)
-	{	
+	{
 		$uris = $this->extractURIsFromPost($p);
 		return $this->testURIs($uris);
 	}
-	
+
 	function testURIs(array $uris)
 	{
 		if (!count($uris)) {return NULL;}
-		
+
 		list($totalspam, $totalham) = $this->db->getTotalPosts(); if (!$totalham || !$totalspam) {return;}
 		$totalspam /= 10; $totalham /= 10; // totals are too inflated
-		
+
 		$wordlist = $this->db->getWordList($this->db->hashWords($uris)); if (!$wordlist || !count($wordlist)) {return;}
 		$wordlist = $wordlist->fetchAll(PDO::FETCH_ASSOC);
 		$spamness = 0;
@@ -49,7 +49,7 @@ class SBlamSpamvertises extends SblamTestPost
 			// make spam/ham in range 0-100
 			$spam = min(100, $r['spam'] / ($totalspam/100));
 			$ham = min(100, $r['ham']  / ($totalham/100));
-			
+
 			// and now make it 1-150 with nonlinear skew
 			$spam += 5*sqrt($spam);
 			$ham += 5*sqrt($ham);
@@ -62,7 +62,7 @@ class SBlamSpamvertises extends SblamTestPost
 		}
 
 		$hampop = max(0, $hampop - $spampop);
-		
+
 		if ($hampop > 1 && $spamness < 0 && $maxspamness < 0.3)
 		{
 			$score = (($spamness - $hampop) / (count($wordlist)+1) * (0.3 - $maxspamness))/3;
@@ -72,19 +72,19 @@ class SBlamSpamvertises extends SblamTestPost
 
 		$maxspamness *= $maxspamness; // if in doubt, don't punish
 		$maxspamness *= $maxspamness; // if in doubt, don't punish
-		
+
 		$score = (($spampop+3) * $maxspamness)/18;
 		if ($score > 0.7) $score = ($score-0.7)/2+0.7;
 		if ($score > 1.1) $score = ($score-1.1)/3+1.1;
 
 		return $score < 0.1 ? NULL : array($score, $maxspamness * self::CERTAINITY_NORMAL ,"Spamvertised websites (".round($score,2)." = ".round($spamness,2).", max ".round($maxspamness,2).")");
 	}
-	
+
 	function addPost(ISblamPost $p, $isspam, $howmuch = 1)
 	{
 		$this->db->add($this->extractURIsFromPost($p),$isspam, $howmuch);
 	}
-	
+
 	function addURIs(array $links, $isspam, $howmuch = 1)
 	{
 		$parsed = array();
@@ -95,25 +95,25 @@ class SBlamSpamvertises extends SblamTestPost
 			}
 			catch(Exception $e){warn($e);}
 		}
-		if (count($parsed)) 
+		if (count($parsed))
 		{
 			return $this->db->add(array_keys($parsed), $isspam, $howmuch);
 	}
 		return false;
 	}
-	
+
 	function addURI(array &$urls, SblamURI $link, $prefix = '')
-	{	
+	{
 	  if ($link->isTLD()) {return;}
-	  		  		  
+
 		if ($hostname = $link->getHostname())
-		{		  
-		  $hostname = preg_replace(array('!^www\.!','!\d\d+!'),array('','D'),$hostname);	// normalise digits! (block bulk registrations)		
+		{
+		  $hostname = preg_replace(array('!^www\.!','!\d\d+!'),array('','D'),$hostname);	// normalise digits! (block bulk registrations)
 			$urls[$prefix.$hostname] = true;
 
   		if ($domain = $link->getDomain())
   		{
-  		  $urls[$prefix.$domain] = true;  		  
+  		  $urls[$prefix.$domain] = true;
 		  }
 
 			if ($p = $link->getPath())
@@ -154,11 +154,11 @@ class SBlamSpamvertises extends SblamTestPost
 			$this->addURI($uris,$link);
 		}
 		$this->addEmail($uris, $p->getAuthorEmail());
-	
+
 		return array_keys($uris);
 	}
-	
-	
+
+
 	static function info()
 	{
 		return array(
