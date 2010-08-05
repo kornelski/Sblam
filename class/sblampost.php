@@ -38,11 +38,11 @@ class SblamPost implements ISblamPost
 	{
 		if (!$this->dom)
 		{
-				$this->dom = new DOMDocument();
-				if (!@$this->dom->loadHTML(
-					'<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>'.
-					$this->getRawContent()
-				)) {$this->dom = NULL;}
+			$this->dom = new DOMDocument();
+			if (!@$this->dom->loadHTML(
+				'<html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"></head><body>'.
+				$this->getRawContent()
+			)) {$this->dom = NULL;}
 		}
 		return $this->dom;
 	}

@@ -124,7 +124,7 @@ class SblamTestBayes extends SblamTestPost
 	protected function extractWordsFromPost(ISblamPost $p)
 	{
 		// get both raw and stripped text, to find more phrases (word count doesn't matter)
-		$txt = $p->getRawContent().' '.$p->getText().' '.$p->getAuthorName().' '.$p->getAuthorEmail().' '.$p->getAuthorURI();
+		$txt = $p->getRawContent().' '.rawurldecode($p->getText()).' '.$p->getAuthorName().' '.$p->getAuthorEmail().' '.$p->getAuthorURI();
 		return self::extractWords($txt, $this->db->ignore);
 	}
 
@@ -145,7 +145,7 @@ class SblamTestBayes extends SblamTestPost
 			$words = strtolower($words);
 		}
 
-		return preg_split("![^a-z0-9\pN\pL]+(?:..?[^a-z0-9\pN\pL]+)*!u",$words,NULL,PREG_SPLIT_NO_EMPTY);
+			return preg_split("![^a-z0-9\pN\pL]+(?:..?[^a-z0-9\pN\pL]+)*!u",$words,NULL,PREG_SPLIT_NO_EMPTY);
 	}
 
 	static function extractWords($words, array $ignore = array())

@@ -78,7 +78,7 @@ class BayesBase
 		   . str_repeat("(unhex(?),?,$howmuch,0),",count($hashes)/2-1)."(unhex(?),?,$howmuch,0) on duplicate key update added = now(), $colname = $colname+$howmuch";
 
 			$this->db->prepareExecute($q,$hashes);
-		   if (!$this->db->exec("/*maxtime10*/UPDATE {$this->table}total set total$colname = total$colname + $howmuch")) throw new Exception("Can't increase counters");
+		   if (!$this->db->exec("/*maxtime5*/UPDATE {$this->table}total set total$colname = total$colname + $howmuch")) throw new Exception("Can't increase counters");
 		  $this->db->commit();
 	   }
 	   catch(Exception $e)

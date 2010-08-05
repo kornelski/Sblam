@@ -4,33 +4,29 @@ ini_set("zlib.output_handler",0);
 
 class LivePage extends AdminPage
 {
-	private $prepared;
 
 	private function fetchdata($lastid)
 	{
-		$pdo = $this->getPDO();
 		$lastid = intval($lastid);
 
-		if (!$this->prepared)
-		{
 		    // MySQL is crap.
 		    // If I make it a dependent query and try to sort it on database side, all gets copied into temporary tables, even when SQL_SMALL_RESULT is added everywhere
-			$this->prepared = $pdo->prepare("/*maxtime1*/SELECT SQL_SMALL_RESULT
+$sql = "/*maxtime=1*/SELECT SQL_SMALL_RESULT
                 posts_meta.id,from_unixtime(`timestamp`) as `time`,
                 COALESCE(NULLIF(dnsrevcache.host,''),inet_ntoa(posts_meta.ip)) as ip,
                 concat(spamscore,'/',spamcert) as spamscore,
                 concat(posts_data.host,substring(path,1,50)) as path,
                 concat(round(worktime/1000,1),'s') as work,
                 added,spamreason
-            FROM posts_meta FORCE INDEX (primary) INNER JOIN posts_data FORCE INDEX (id) USING(id)
+            FROM posts_meta FORCE INDEX FOR ORDER BY (primary) INNER JOIN posts_data FORCE INDEX (id) USING(id)
             LEFT JOIN dnsrevcache FORCE INDEX (primary) USING(ip)
-            WHERE posts_meta.id >= ?
+            WHERE posts_meta.id >= $lastid
             ORDER BY posts_meta.id DESC
-            LIMIT 30");
-		}
+            LIMIT 30";
 
-		$this->prepared->execute(array($lastid));
-		$lastposts = $this->prepared->fetchAll(PDO::FETCH_ASSOC);
+		$pdo = $this->services->getDB();
+
+		$lastposts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 		usort($lastposts,array('self','sortByTime'));
 
@@ -89,10 +85,10 @@ class LivePage extends AdminPage
 			}
 			$data['processlist'] = array_values($data['processlist']);
 
-			echo "Event: message\n";
-			echo "Bubbles: No\n";
-			echo "data:".json_encode($data)."\n";
-			echo "; max is $lastid\n\n";
+//			echo "event: message\n";
+			echo "id: $lastid\n";
+			echo "data: ".json_encode($data)."\n";
+			echo "\n";
 
 			@flush();
 			if ($lastrows == count($data['lastposts']) + 100*count($data['processlist']))

@@ -137,7 +137,7 @@ class MainPage extends AdminPage
 	    return reset($res);
   }
 
-	private function archivize($move = 500, $leave = 5000)
+	private function archivize($move = 600, $leave = 25000)
 	{
 	    $leave = intval($leave);
 	    $move = intval($move);
@@ -170,7 +170,7 @@ added,post,chcookie,worktime,account,profiling
 	{
 	    if (isset($_POST['archive']))
 	    {
-	        $max = 15;
+	        $max = 50;
 	        $moved_total = 0;
 	        while($max--)
 	        {

@@ -3,6 +3,7 @@
 
 class SblamTestHashes extends SblamTestPost
 {
+
 	function testPost(ISblamPost $p)
 	{
 		if (preg_match('!^\s*([a-f0-9]{32,64}).+?\s.+?([a-f0-9]{32,64})?\s*$!si',$p->getRawContent(),$res))
@@ -13,6 +14,8 @@ class SblamTestHashes extends SblamTestPost
 		}
 		return NULL;
 	}
+
+
 
 	static function info()
 	{

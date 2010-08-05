@@ -154,3 +154,18 @@ interface ISblamTestTrackback extends ISblamTest
 	/** @see ISblamTestPost::testPost() */
 	function testTrackback(ISblamTrackback $t);
 }
+
+interface ISblamHttp
+{
+    function setPost($payload, $content_type);
+    function setPath($path, array $query_string = array());
+    function setHost($host);
+    function setTimeout($timeout);
+    function requestAsync();
+}
+
+interface ISblamHTTPAsyncResponse
+{
+    function getStatus();
+    function getResponseBody();
+}

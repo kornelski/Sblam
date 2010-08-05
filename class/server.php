@@ -216,9 +216,9 @@ class ServerRequest
 		@ob_flush();flush();
 	}
 
-	private function insertArray($table,array $out)
+	private function insertArray($table,array $out, $maxtime=20)
 	{
-	    $q = "INSERT into $table (".implode(',',array_keys($out)).") values(?".str_repeat(",?",count($out)-1).")";
+	    $q = "/*maxtime=$maxtime*/INSERT into $table (".implode(',',array_keys($out)).") values(?".str_repeat(",?",count($out)-1).")";
 	    $pre = $this->db->prepare($q);
 		if (!$pre) return NULL;
 		return $pre->execute(array_values($out));
@@ -251,7 +251,7 @@ class ServerRequest
     			'account'=>$this->account->id,
     			'serverid'=>$sblampost->getInstallId(),
     		);
-		    $this->insertArray('posts_meta',$out);
+		    $this->insertArray('posts_meta',$out,10);
             $this->stored_id = $this->db->lastInsertId();
 
 		    $out = array(
@@ -270,7 +270,7 @@ class ServerRequest
     			'post'=>$post,
     		);
 
-		    $this->insertArray('posts_data',$out);
+		    $this->insertArray('posts_data',$out,20);
 		    $this->db->commit();
 		    return true;
 	    }
