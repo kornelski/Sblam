@@ -1,6 +1,82 @@
+0.5: /------------------------+\s+\[url=/
+0.5: http://kredyt
+0.6: kredyty-
+3: l o c k e r z
+0.6: SEO company
+1: za.darmo.
+0.4: FREE
+0.3: praca przy komputerze
+4: puzz.biz.pl
+5: puzz.net.pl
+1: takeagift
+1: BETWAY
+3: betwayodds
+3: #file_links
+3: zarabiaj na reklamie
+0.5: NAPRAWDE WARTO!
+1: CHCESZ ZAROBIĆ?
+0.5: surfbar
+0.3: ZOBACZ!!!
+1: Nagrody za free
+0.3: wygrywaj nagrody
+0.6: your website on first page of Google
+0.2: sms na numer
+3: dollars2surf
+0.1: 1.22(+VAT)
+3: nagrodanabank
+3: LOCKERZ
+1: WEJDŹ ZARÓB
+5: lockerz
+0.3: NIE SCAM
+5: .cheap-24h.
+0.3: referral.cgi
+0.2: ?ref=
+0.4: affiliate_id
+3: [/url], [link=
+0.4: affiliate=
+0.8: wowgold
+3: buy-viagra
+3: cheap-tramadol
+3: buy-xanax
+3: buy-tramadol
+3: buy-phentermine
+0.5: praca w domu
+0.1: seo@
+0.2: spam@
+1: zarabianie przez internet
+1: neobux
+0.2: forum/member.php
+0.3: /\/members\//
+0.3: seotool
+0.1: kredyty
+0.4: Seo katalog
+5: îăî
+11: roudycash
+11: dingobux
+11: smartbarre
+0.2: ?referrer=
+0.1: /?r=
+1: ZARABIAJ NA NECIE
+2: umieść swoje konto na 5 miejscu
+0.5: wow-gold
+0.3: Koniecznie wejdź na stronę
+0.2: Zapraszamy na
+0.4: ?refid=
+1: chcesz zarabiać przez internet
+0.4: NIE WPISUJ SWOJEGO NUMERU KONTA
 1: XRumer
+0.2: sportingbet
 0.2: clickthrgh.asp
+0.3: affiliates.com
+0.2: link pozycjonujący
+0.2: refid=
+0.3: /[sS][eE][oO].*?[Pp]ozycjonowanie/
+5: bux.to
 0.3: /affiliate.
+5: bux.to/
+0.6: +ADw-script
+0.5: /[zZ]ar(ób|abiaj) ponad.*zł/
+0.5: dopisz numer swojego konta, przesuwaj
 0.1: .info
 0.6: .cn/
 5: EUROBARRE
@@ -8,18 +84,22 @@
 2: eurokasa
 3: norbysurf
 0.5: pozycjonowanie stron internetowych
+0.2: /([a-z]{3,}( [a-z]{3,})? ?, ?){4,}/
 0.3: /<script.*cookie/
 0.6: /@[a-z0-9.-]+\.(ee|cn)/
 0.3: .txt;
 0.2: /[!.?][a-zA-Z](\r?\n|$)/
 0.2: /@[a-z0-9.-]+\.(ru|ua|info|biz)/
 0.2: <script src="data;
+0.5: pozycjonowanie@
 0.1: /@[a-z0-9-]+\.(biz|info)/
 1: tym szybciej zaczniesz zarabia
 0.4: /zainwest[\S]+ TYLKO \d+\s*Z/
 1: /Multi[ -]?Level[ -]?Marketing|zarabiania w sieci| tajniki zarabiania/
 1: zarobienia prawdziwych pieni
 1: kluczem do zarabiania
+0.3: zarabiaj $
+0.3: /(pisanie|sprzeda).*prac.*magistersk/
 0.7: <div style="overflow: auto; height: 1px;">
 0.4: <Text>
 0.9: /<a href=\s*><\/a>\s*[url=][\/url]/

@@ -291,6 +291,7 @@ blogdns.org
 blogsite.org
 blogspot.com
 bloog.pl
+blox.pl
 bmd.br
 bn.it
 bo.it
@@ -2871,6 +2872,7 @@ ts.it
 tsaritsyn.ru
 tsk.ru
 tula.ru
+tumblr.com
 tur.br
 turek.pl
 turin.it
