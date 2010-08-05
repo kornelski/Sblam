@@ -37,7 +37,7 @@ class BayesBase
 	{
 	    $numwords = count($words);
 
-    	$q = "/*maxtime20*/INSERT ignore into {$this->table}translate (wordh,word) values"
+    	$q = "/*maxtime15*/INSERT ignore into {$this->table}translate (wordh,word) values"
 		   . str_repeat('(unhex(?),?),',$numwords-1)."(unhex(?),?)";
 
 		for($i=0; $i<$numwords; $i++)
@@ -108,7 +108,7 @@ class BayesBase
 
 	function getWordList(array $hashes)
 	{
-		$q = "/*maxtime=20*/SELECT hex(wordh) as wordh,spam,ham,flags from {$this->table}wordsh where wordh in (".str_repeat('unhex(?),',count($hashes)-1)."unhex(?))";
+		$q = "/*maxtime=15*/SELECT hex(wordh) as wordh,spam,ham,flags from {$this->table}wordsh where wordh in (".str_repeat('unhex(?),',count($hashes)-1)."unhex(?))";
 
 		$statement = $this->db->prepare($q);
 		if (!$statement || !$statement->execute($hashes)) {return NULL; }

@@ -283,12 +283,12 @@ class ServerRequest
 
 	function storeResult($score, $cert, $reason, $worktime, $added, $profilingres = NULL)
 	{
-    	$q = "UPDATE posts_meta set spamscore=?,spamcert=?,worktime=?,added=? where id=?";
+    	$q = "/*maxtime=10*/UPDATE posts_meta set spamscore=?,spamcert=?,worktime=?,added=? where id=?";
 		$pre = $this->db->prepare($q);
 		if (!$pre || !$pre->execute(array(round($score*100), round($cert*100),  round($worktime*1000), $added, $this->stored_id))) return false;
 
 
-  		$q = "UPDATE posts_data set spamreason=?,profiling=? WHERE id=?";
+  		$q = "/*maxtime=10*/UPDATE posts_data set spamreason=?,profiling=? WHERE id=?";
 		$pre = $this->db->prepare($q);
 		if (!$pre || !$pre->execute(array($reason,$profilingres,$this->stored_id))) return false;
 
@@ -394,7 +394,7 @@ class Server
 		/* @todo if any field name is given, stop guessing! and change this list of prefixes to regexp */
 		$prefix = array('','comment_','post_','comment','osly','wp_','d_','shout_','n_','f_');
 
-		$contentlabels = array('content','message','comment','commentcontent','tresc','msg','cont','koment','text','wpis','tekst','txt','opis','post','trescpostu','rozsztxt','body','komentarz','wiadomosc','description','cfQuestion');
+		$contentlabels = array('content','message','comment','commentcontent','tresc','msg','cont','koment','text','wpis','tekst','mtxMessage','txt','opis','post','trescpostu','rozsztxt','body','komentarz','wiadomosc','description','cfQuestion');
 		if (!empty($fs[0])) $contentlabels = array_merge(explode('|',$fs[0]), $contentlabels);
 		$content = $this->findField($postdata, $contentlabels, $prefix);
 
@@ -402,11 +402,11 @@ class Server
 		if (!empty($fs[1])) $authorlabels = array_merge(explode('|',$fs[1]), $authorlabels);
 		$author = $this->findField($postdata, $authorlabels, $prefix);
 
-		$emaillabels = array('email','mail','emil','eml','e-mail','mejl','emejl','imejl','commentemail','adres_email');
+		$emaillabels = array('email','mail','emil','eml','e-mail','mejl','emejl','imejl','commentemail','adres_email','txtEmail');
 		if (!empty($fs[2])) $emaillabels = array_merge(explode('|',$fs[2]), $emaillabels);
 		$email = $this->findField($postdata, $emaillabels, $prefix);
 
-		$urllabels = array('url','uri','strona','www','adres','stronawww','adresstrony','website','site','adres_strony');
+		$urllabels = array('url','uri','strona','www','adres','stronawww','adresstrony','website','site','adres_strony','txtUrl');
 		if (!empty($fs[3])) $urllabels = array_merge(explode('|',$fs[3]), $urllabels);
 		$url = $this->findField($postdata, $urllabels, $prefix);
 

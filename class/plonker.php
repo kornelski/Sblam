@@ -21,7 +21,7 @@ class Plonker
 	{
 		if (!count($ips)) return;
 
-		$prep = $this->db->prepare("select count(if(`ip`=?,1,NULL)) as `exact`, count(*) as `cnt`, sum(if(`ip`=?,55000+100*`spampoints`,5500+10*`spampoints`*{$this->subnetrelevance})/(60000+abs(time_to_sec(timediff(now(),`added`))))) as `total` from {$this->table} where `ip` between ? and ?");
+		$prep = $this->db->prepare("/*maxtime=5*/SELECT count(if(`ip`=?,1,NULL)) as `exact`, count(*) as `cnt`, sum(if(`ip`=?,55000+100*`spampoints`,5500+10*`spampoints`*{$this->subnetrelevance})/(60000+abs(time_to_sec(timediff(now(),`added`))))) as `total` from {$this->table} where `ip` between ? and ?");
 
 		if (!$prep) {warn($this->db->errorInfo(),"prepare failed");return NULL;}
 
@@ -62,7 +62,7 @@ class Plonker
 			$first = !$this->firstipskew;
 		}
 
-		$q = "insert into {$this->table} (`ip`,`spampoints`) values".substr(str_repeat("(?,?),", count($ips)/2),0,-1).
+		$q = "/*maxtime=15*/INSERT INTO {$this->table} (`ip`,`spampoints`) values".substr(str_repeat("(?,?),", count($ips)/2),0,-1).
 				 " on duplicate key update `spampoints` = `spampoints` + 1.5*values(`spampoints`)";
 
 		if (!($prep = $this->db->prepare($q))) {warn($this->db->errorInfo(),"addprepfail");warn($ips,count($ips)/2);return false;}
@@ -87,7 +87,7 @@ class Plonker
 	{
 		if (!count($ips)) return;
 
-		$prep = $this->db->prepare("update {$this->table} set `added` = `added`, `spampoints` = `spampoints` * if(`ip`=?, ?, ?) where `ip` between ? and ?");
+		$prep = $this->db->prepare("/*maxtime=15*/UPDATE {$this->table} set `added` = `added`, `spampoints` = `spampoints` * if(`ip`=?, ?, ?) where `ip` between ? and ?");
 		if (!$prep) return false;
 
 		$first = true;

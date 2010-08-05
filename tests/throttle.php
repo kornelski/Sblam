@@ -138,7 +138,7 @@ class SBlamThrottle extends SblamTestPost
 
 		list($points,$desc) = $this->accumulator->getResult();
 
-		if ($points > 0) return array($points/6, self::CERTAINITY_NORMAL, "Throttle ".round($points,1)." $desc");
+		if ($points > 0) return array($points/5, self::CERTAINITY_NORMAL, "Throttle ".round($points,1)." $desc");
 	}
 
 	function reportResult(ISblamPost $p, $score, $cert)

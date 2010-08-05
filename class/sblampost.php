@@ -3,7 +3,7 @@
 require_once "interfaces.php";
 require_once "class/sblamuri.php";
 
-class SBlamPost implements ISblamPost
+class SblamPost implements ISblamPost
 {
 	public $bayesadded = false;
 
@@ -172,7 +172,7 @@ class SBlamPost implements ISblamPost
 	function getAuthorName() {return $this->authorname;}
 	function getAuthorEmail() {return $this->authormail;}
 	function getAuthorURI() {return $this->authoruri !== 'http://'?$this->authoruri:NULL;} /** @todo should check if link looks valid. now just excludes one popular default */
-	function getAuthorIP() {return $this->authorips[0];}
+	function getAuthorIP() {return count($this->authorips)?$this->authorips[0]:NULL;}
 	function getAuthorIPs() {return $this->authorips;}
 
 	protected $signature;
@@ -191,7 +191,7 @@ class SBlamPost implements ISblamPost
 	function getInstallId() {return $this->serverinstallid;}
 }
 
-class SBlamPostAuto extends SBlamPost
+class SblamPostAuto extends SblamPost
 {
 	function __construct($contentfield=NULL,$namefield=NULL,$mailfield=NULL,$urifield=NULL)
 	{

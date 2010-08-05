@@ -2,7 +2,7 @@
 
 require_once "class/sblampost.php";
 
-class SBlamBasePost extends SblamPost
+class SblamBasePost extends SblamPost
 {
 	protected $reason;
 	function setSpamReason($r) {$this->reason = $r;}

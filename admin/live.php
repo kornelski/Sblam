@@ -9,6 +9,7 @@ class LivePage extends AdminPage
 	private function fetchdata($lastid)
 	{
 		$pdo = $this->getPDO();
+		$lastid = intval($lastid);
 
 		if (!$this->prepared)
 		{

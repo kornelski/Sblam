@@ -13,7 +13,7 @@ abstract class SblamTest
 	static function info() {return array();}
 }
 
-abstract class SblamTestPost extends SblamTest implements ISBlamTestPost
+abstract class SblamTestPost extends SblamTest implements ISblamTestPost
 {
 	function preTestPost(ISblamPost $p) {}
 	function reportResult(ISblamPost $post,$score,$cert) {}

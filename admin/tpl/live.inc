@@ -26,7 +26,6 @@ tr.new {background:#ffe;}
 <table id="lastposts" border="1" cellpadding="3">
 <thead><tr><th>ID</th><th>date</th><th>IP</th><th>score</th><th>URL</th><th>time</th><th>+</th><th>Reason</th></tr></thead><tbody></tbody>
 </table>
-<event-source src="/admin/live/stream"></event-source>
 <script type="text/javascript">/*<![CDATA[*/
 
 var lastposts = document.getElementById('lastposts');
@@ -36,6 +35,7 @@ var updno=0;
 var processresult = function(serv,result)
 {
 	var load = document.getElementById('load');
+
 	load.replaceChild(document.createTextNode(result.sysload.toString() + ' ' + updno),load.firstChild);
 	
 	var minnullid = serv.lastid+9999999;
@@ -137,21 +137,6 @@ var update = function()
 
 };
 
-var eventsrc = document.getElementsByTagName('event-source')[0];
-
-if (eventsrc.addEventSource)
-{
-	
-	eventsrc.addEventListener('message',function(e){
-	updno++;
-		eval('var result = ' + e.data);
-		processresult(servers[0],result);
-	},false);
-}
-else
-{
-	
-	update();
-}
+update();
 
 /*]]>*/</script>

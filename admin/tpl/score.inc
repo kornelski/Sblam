@@ -208,7 +208,7 @@ href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</
     <form method="post" action=""><h3>Hams <input type="submit" name="bannedhams" value="Move banned by IP to top" /></h3></form>
     <tal:block metal:use-macro="queue" tal:define="queue hams" />
   </div>
-  <script type="text/javascript">
+  <script type="text/javascript">/*<![CDATA[*/
     spam_init_list(document.getElementById('ham-list').getElementsByTagName('li'), false);
 
 	document.addEventListener('keypress',function(e){
@@ -224,5 +224,5 @@ href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</
 			}
 		}
 	},true);
-  </script>
+/*]]>*/</script>
 </div>

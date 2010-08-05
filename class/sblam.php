@@ -58,7 +58,7 @@ class Sblam implements ISblam
 		d(get_class($t),"added to $phase");
 	}
 
-    const EARLY_ESCAPE_LIMIT = 3.2; // maximum score
+    const EARLY_ESCAPE_LIMIT = 2.5; // maximum score
 
 	function testPost(ISblamPost $p)
 	{

@@ -3,7 +3,7 @@
 require_once "class/sblambasepost.php";
 require_once "class/server.php";
 
-class SBlamBaseIterator implements Iterator
+class SblamBaseIterator implements Iterator
 {
 	protected $pdo, $base;
 	function __construct(SBlamBase $base, PDOStatement $pdo)

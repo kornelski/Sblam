@@ -20,8 +20,9 @@ class TestPage extends AdminPage
 
         $config = Server::getDefaultConfig();
 
-        $config['throttle']['enabled'] = '0';
+        $config['throttle']['enabled'] = '0'; // FIXME: this should be handled within plugins
         $config['linksleeve']['enabled'] = '0';
+        $config['dupes']['enabled'] = '0';
 
         $sblam = new Sblam($config);
 
