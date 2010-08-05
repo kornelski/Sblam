@@ -4,7 +4,6 @@ class CleanupPage extends AdminPage
 {
 	function index()
 	{
-	    $plonkertable = 'plonker';
 
 		$pdo = $this->getPDO();
 		$pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -15,7 +14,7 @@ class CleanupPage extends AdminPage
 		$pdo->exec("TRUNCATE bayeswordsh_s");
 		$pdo->exec("TRUNCATE linkswordsh_s");
 
-		$pdo->exec("/*maxtime15*/UPDATE {$plonkertable} f join dnscache d on f.ip=d.ip left join trustedproxies t on t.host=d.host
+		$pdo->exec("/*maxtime15*/UPDATE plonker f join dnscache d on f.ip=d.ip left join trustedproxies t on t.host=d.host
 		set f.added=f.added,f.spampoints = f.spampoints/2 where
 		d.host like '%.adsl.tpnet.pl' or
 		d.host like '%.dialog.net.pl' or
@@ -23,10 +22,15 @@ class CleanupPage extends AdminPage
 		d.host like '%.unregistered.net.telenergo.pl' or
 		t.host is not null
 		");
-		$pdo->exec("/*maxtime10*/DELETE from {$plonkertable} where (spampoints<100 and added < now() - interval 2 month) or spampoints<5");
+		$pdo->exec("/*maxtime10*/DELETE from plonker where (spampoints<100 and added < now() - interval 3 month) or spampoints<5");
 
-		$pdo->exec("/*maxtime10*/DELETE from dnscache where host is NULL or rand()<0.3");
-		$pdo->exec("/*maxtime10*/DELETE from dnsrevcache where ip = 0 or rand()<0.3");
+		$pdo->exec("/*maxtime10*/DELETE from dnscache where host is NULL or rand()<0.4");
+		$pdo->exec("/*maxtime10*/DELETE from dnsrevcache where ip = 0 or rand()<0.4");
+		$pdo->exec("/*maxtime10*/delete from plonker where ip = inet_aton('127.0.0.1') or
+ip between inet_aton('172.16.0.0') and inet_aton('172.31.255.255') or
+ip between inet_aton('192.168.0.0') and inet_aton('192.168.255.255') or
+ip between inet_aton('10.0.0.0') and inet_aton('10.255.255.255') or
+ip between inet_aton('224.0.0.0') and inet_aton('255.255.255.255');");
 
 		$n=0;
 		$q = $pdo->query("/*maxtime15*/SELECT t.host FROM trustedproxies t left join dnscache d ON d.host = t.host WHERE d.host is NULL");
@@ -45,6 +49,12 @@ class CleanupPage extends AdminPage
 		{
 			$pdo->exec("/*maxtime60*/DELETE from linkswordsh where spam<3 and ham<2 and added < now() - interval 1 month limit 100000");
 		}
+
+		$pdo->exec("DELETE from plonker WHERE ip BETWEEN  INET_ATON('192.168.0.0') AND INET_ATON('192.168.255.255')");
+
+		$pdo->exec("DELETE from plonker WHERE ip BETWEEN  INET_ATON('172.16.0.0' ) AND INET_ATON('172.31.255.255')");
+
+		$pdo->exec("DELETE from plonker WHERE ip BETWEEN  INET_ATON('127.0.0.0' ) AND INET_ATON('127.0.0.255')");
 
 /*
 		set @minid = least((select id-40000 from posts_meta order by id desc limit 1),(select id+5000 from posts_meta order by id limit 1)); insert into posts_archive
