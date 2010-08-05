@@ -1,6 +1,6 @@
 <?php
 
-class SBlamChallenge extends SblamTestPost
+class SblamTestChallenge extends SblamTestPost
 {
     const CACHE_MAXAGE = 3600;
     const TZ_TOLERANCE = 43200;

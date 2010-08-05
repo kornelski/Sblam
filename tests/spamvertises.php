@@ -2,7 +2,7 @@
 
 require_once "class/bayesbase.php";
 
-class SBlamSpamvertises extends SblamTestPost
+class SblamTestSpamvertises extends SblamTestPost
 {
 	protected $db;
 

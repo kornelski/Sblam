@@ -1,6 +1,6 @@
 <?php
 
-class SBlamOptimist extends SblamTestPost
+class SblamTestOptimist extends SblamTestPost
 {
 	protected $score;
 

@@ -2,7 +2,7 @@
 
 require_once "class/bayesbase.php";
 
-class SBlamBayes extends SblamTestPost
+class SblamTestBayes extends SblamTestPost
 {
 	protected $db;
 	protected $add;
@@ -107,7 +107,7 @@ class SBlamBayes extends SblamTestPost
 		return $this->db->testWords(self::extractWords($txt, $this->db->ignore));
 	}
 
-	protected function extractWordsFromLinks(ISBlamPost $p)
+	protected function extractWordsFromLinks(ISblamPost $p)
 	{
 		// test link labels specifically
 		$labels = '';
@@ -119,7 +119,7 @@ class SBlamBayes extends SblamTestPost
 		return self::extractWords($labels, $this->db->ignore);
 	}
 
-	protected function extractWordsFromPost(ISBlamPost $p)
+	protected function extractWordsFromPost(ISblamPost $p)
 	{
 		// get both raw and stripped text, to find more phrases (word count doesn't matter)
 		$txt = $p->getRawContent().' '.$p->getText().' '.$p->getAuthorName().' '.$p->getAuthorEmail().' '.$p->getAuthorURI();

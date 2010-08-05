@@ -84,7 +84,7 @@ class ThrottleAccumulator
 
 }
 
-class SBlamThrottle extends SblamTestPost
+class SblamTestThrottle extends SblamTestPost
 {
 	protected $accumulator;
 

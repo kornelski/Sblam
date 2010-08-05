@@ -6,7 +6,7 @@ require_once "class/server.php";
 class SblamBaseIterator implements Iterator
 {
 	protected $pdo, $base;
-	function __construct(SBlamBase $base, PDOStatement $pdo)
+	function __construct(SblamBase $base, PDOStatement $pdo)
 	{
 		$this->base = $base;
 		$this->pdo = $pdo;
@@ -43,7 +43,7 @@ class SblamBaseIterator implements Iterator
 	function nextRow() {return $this->current;}
 }
 
-class SBlamBase
+class SblamBase
 {
 	protected $db;
 	function __construct(PDO $db)
@@ -86,10 +86,10 @@ class SBlamBase
 
 		if (!$prep || !$prep->execute($args)) {warn($this->db->errorInfo());return false;}
 
-		return new SBlamBaseIterator($this,$prep);
+		return new SblamBaseIterator($this,$prep);
 	}
 
-	function nextRow(SBlamBaseIterator $i)
+	function nextRow(SblamBaseIterator $i)
 	{
 		return $this->postFromRow($i->nextRow());
 	}

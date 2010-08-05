@@ -1,6 +1,6 @@
 <?php
 
-class SblamKeywords extends SblamTestPost
+class SblamTestKeywords extends SblamTestPost
 {
 	protected $keywords, $blocklist;
 

@@ -2,7 +2,7 @@
 
 require_once "class/domainmatch.php";
 
-class SblamDomains extends SblamTestPost
+class SblamTestDomains extends SblamTestPost
 {
 	protected $blacklist, $blacklistfile;
 

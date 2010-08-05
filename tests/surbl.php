@@ -1,6 +1,6 @@
 <?php
 
-class SblamSurbl extends SblamTestPost
+class SblamTestSurbl extends SblamTestPost
 {
 	function preTestPost(ISblamPost $p)
 	{
@@ -12,6 +12,7 @@ class SblamSurbl extends SblamTestPost
 			if ($host = $link->getHostname()) $this->checkHost($host);
 			if ($domain = $link->getDomain()) $this->checkHost($domain);
 		}
+
 	}
 
 	function testPost(ISblamPost $p)

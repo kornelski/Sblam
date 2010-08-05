@@ -1,6 +1,6 @@
 <?php
 
-class SBlamLateNight extends SblamTestPost
+class SblamTestLateNight extends SblamTestPost
 {
 
 	function testPost(ISblamPost $p)

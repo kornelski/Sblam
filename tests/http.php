@@ -1,6 +1,7 @@
 <?php
 
-class SBlamHttp extends SblamTestPost
+
+class SblamTestHttp extends SblamTestPost
 {
     function testPost(ISblamPost $p)
     {

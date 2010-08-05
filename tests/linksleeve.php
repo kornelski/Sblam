@@ -6,7 +6,7 @@
  *
  *  Returns accept/reject via XML RPC
  */
-class SBlamLinkSleeve extends SblamTestPost
+class SblamTestLinkSleeve extends SblamTestPost
 {
     const API_HOST = 'www.linksleeve.org';
     const API_PATH = '/slv.php';

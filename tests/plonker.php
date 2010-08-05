@@ -2,7 +2,7 @@
 
 require_once "class/plonker.php";
 
-class SBlamPlonker extends SblamTestPost
+class SblamTestPlonker extends SblamTestPost
 {
 	private $plonker;
 	private $add;

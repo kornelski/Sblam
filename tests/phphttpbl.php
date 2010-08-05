@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__).'/dnsbl.php';
 
-class SblamPHPHTTPBL extends SblamDNSBL
+class SblamTestPHPHTTPBL extends SblamTestDNSBL
 {
 	protected $key;
 	function __construct(array $settings)

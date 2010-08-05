@@ -1,7 +1,7 @@
 <?php
 
 
-class SBlamCorrectFields extends SblamTestPost
+class SblamTestCorrectFields extends SblamTestPost
 {
 	protected function hasURI($text)
 	{

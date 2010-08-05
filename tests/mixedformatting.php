@@ -1,7 +1,7 @@
 <?php
 
 
-class SBlamMixedformatting extends SblamTestPost
+class SblamTestMixedformatting extends SblamTestPost
 {
 
 	function testPost(ISblamPost $p)

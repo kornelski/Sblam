@@ -1,7 +1,7 @@
 <?php
 
 
-class SBlamHashes extends SblamTestPost
+class SblamTestHashes extends SblamTestPost
 {
 	function testPost(ISblamPost $p)
 	{

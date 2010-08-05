@@ -1,6 +1,6 @@
 <?php
 
-class SblamDeDupe extends SblamTestPost
+class SblamTestDeDupe extends SblamTestPost
 {
 	protected $db;
 	function __construct(array $settings)

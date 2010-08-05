@@ -1,7 +1,7 @@
 <?php
 
 
-class SBlamLinkmania extends SblamTestPost
+class SblamTestLinkmania extends SblamTestPost
 {
 	function testPost(ISblamPost $p)
 	{

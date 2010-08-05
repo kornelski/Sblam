@@ -1,6 +1,6 @@
 <?php
 
-class SblamScalpel extends SblamTestPost
+class SblamTestScalpel extends SblamTestPost
 {
 	protected $patterns =array();
 

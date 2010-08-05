@@ -26,7 +26,7 @@ class Sblam implements ISblam
 
 			try {
 				include_once "tests/".strtolower($name).".php";
-				$classname = "SBlam".ucfirst($name);
+				$classname = "SblamTest".ucfirst($name);
 				if (!class_exists($classname)) warn($name,"Problem loading test plugin");
 
 				$info = call_user_func(array($classname,'info'));

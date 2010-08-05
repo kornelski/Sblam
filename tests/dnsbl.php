@@ -1,6 +1,6 @@
 <?php
 
-abstract class SblamDNSBL extends SblamTestPost
+abstract class SblamTestDNSBL extends SblamTestPost
 {
 	protected $rblhost;
 

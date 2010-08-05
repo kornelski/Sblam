@@ -1,12 +1,12 @@
 <?php
 
-class SblamNetworks extends SblamTestPost
+class SblamTestNetworks extends SblamTestPost
 {
 	protected $whitelist,$blacklist,$isps;
 	function __construct(array $settings)
 	{
 		$whitelist = isset($settings['whitelist'])?$settings['whitelist']:"pl uk";
-		$blacklist = isset($settings['blacklist'])?$settings['blacklist']:"cn ru kr jp ca br hk tw th biz my ni vn mx invalid arpa";
+		$blacklist = isset($settings['blacklist'])?$settings['blacklist']:"cn ru ua kr jp ca br hk tw th biz my ni vn mx invalid arpa il info";
 		$isps = @file_get_contents( isset($settings['spamisp'])?$settings['spamisp']:"data/blockisp.txt" );
 
 		if (!$isps) throw new Exception("Unable to load file with banned ISPs");
@@ -27,6 +27,8 @@ class SblamNetworks extends SblamTestPost
 	function testPost(ISblamPost $p)
 	{
 		// whitelist only direct connection (because other can be forged) and only when there aren't any objectionable hosts there
+
+
 		$out = array();
 		$firstIP = true;
 		$whitelisted = false;
@@ -44,7 +46,7 @@ class SblamNetworks extends SblamTestPost
 		}
 
 		if (!count($out) && $whitelisted) return array(-0.25, self::CERTAINITY_LOW, "Sent from whitelisted TLD ($rev)");
-	    if (count($out)) return $out;
+	  if (count($out)) return $out;
 	}
 
 	static function info()
