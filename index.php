@@ -26,12 +26,12 @@ set_time_limit(20);
 require_once "dbconn.php";
 require_once "class/server.php";
 
-$pdo = sblambaseconnect();
+$services = new SblamServices(sblambaseconnect());
 
 try
 {
-	$server = new Server($pdo);
-	$server->process(new ServerRequest($pdo));
+	$server = new Server($services);
+	$server->process(new ServerRequest($services->getDB()));
 }
 catch(ServerException $e)
 {
