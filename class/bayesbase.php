@@ -99,7 +99,10 @@ class BayesBase
 
 	function getTotalPosts()
 	{
-		$total = $this->db->query("/*maxtime=2*/SELECT totalspam,totalham from {$this->table}total"); if (!$total) return;
+		$total = $this->db->query("/*maxtime=2*/SELECT totalspam,totalham from {$this->table}total");
+		if (!$total) {
+			return;
+		}
 		$total = $total->fetchAll(PDO::FETCH_ASSOC); if (!count($total)) {return;}
 		$totalspam = $total[0]['totalspam'];
 		$totalham = $total[0]['totalham'];
