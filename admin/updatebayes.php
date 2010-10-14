@@ -123,7 +123,7 @@ class UpdatebayesPage extends AdminPage
             'done'=>$done,
             'failed'=> $failures,
             'waited'=>round(0.1*$wait),
-            'waitperpost' => round(0.1*$wait/($done),2)
+            'waitperpost' => $done ? round(0.1*$wait/($done),2) : 0,
         );
     }
 }
