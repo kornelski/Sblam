@@ -16,15 +16,6 @@ Last update ping: ${php:round((time()-apc_fetch('update_active'))/60,1)}m.</p>
     <p tal:condition="php:stats['posts'] GT 5000" ><input type="submit" name="archive" value="Move posts to archive" /> <label><input type="checkbox" name="archive_unadded" /> Move posts that weren't added to bayes base.</label></p>
 </form>
 
-<form tal:condition="missing_tables" method="post">
-
-    <h2>Warning! The following tables have to be created:</h2>
-    <p>
-        <div tal:repeat="t missing_tables"><label><input type="checkbox" checked="checked" name="tables[]" value="${t}" /> ${t}</label></div>
-    </p>
-    <p><input type="submit" value="Create" /></p>
-</form>
-
 <h2>MySQL Status</h2>
 <form method="post" action="">
 	<table class="plaintable sortable" tal:condition="php:count(processes)">
