@@ -31,6 +31,11 @@ class UpdatebayesPage extends AdminPage
         return (apc_fetch('update_active') > time()-240);
     }
 
+    function ended()
+    {
+	    apc_store('update_active',time()-240);
+    }
+
     function post_index($max=12500, $batchsize = 300)
     {
         if ($this->is_active()) die("Another process is active!");
@@ -120,11 +125,13 @@ class UpdatebayesPage extends AdminPage
             }
         }
 
+	    $this->ended();
+
         return array(
             'done'=>$done,
             'failed'=> $failures,
             'waited'=>round(0.1*$wait),
-            'waitperpost' => $done ? round(0.1*$wait/($done),2) : 0,
+            'waitperpost' => round(0.1*$wait/($done),2)
         );
     }
 }
