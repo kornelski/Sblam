@@ -23,7 +23,7 @@ class Sblam implements ISblam
 
 		foreach($ini as $name => $settings)
 		{
-			if (!is_array($settings)) continue;
+			if (!is_array($settings) || $name == 'db') continue;
 
 			if (!empty($settings['disabled']) || (isset($settings['enabled']) && !$settings['enabled'])) {/*d($name,'disabled');*/continue;}
 

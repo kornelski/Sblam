@@ -1,10 +1,5 @@
 <?php
 
-define("SBLAMDB_PASS", "???");
-define("SBLAMDB_USER", "???");
-define("SBLAMDB_BASE", "???");
-define("SBLAMDB_HOST", "???");
-
 class SblamPDO extends PDO
 {
     function prepareExecute($q,array $data)
@@ -16,23 +11,29 @@ class SblamPDO extends PDO
     }
 }
 
-function sblambaseconnect()
+function sblambaseconnect(array $config)
 {
 	static $pdo;
-	$max=10;
 
-	while(!$pdo && $max--)
-	{
-		try {
-			$pdo = new SblamPDO("mysql:host=".SBLAMDB_HOST.";dbname=".SBLAMDB_BASE,SBLAMDB_USER,SBLAMDB_PASS);
-			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$pdo->exec("SET NAMES utf8");
-		}
-		catch(Exception $e)
-		{
-		    if (!$max) throw $e;
-			sleep(1);
-		}
+    if (!isset($config['db'])) throw new Exception("Config does not have db section");
+    $dbcfg = $config['db'];
+
+    if (!isset($dbcfg['dsn'])) throw new Exception("Config does not have dsn variable in db section");
+    if (!isset($dbcfg['user'], $dbcfg['pass'])) throw new Exception("Config does not have user/pass variables in db section");
+
+    $max=5;
+    while(!$pdo && $max--)
+    {
+    	try {
+    		$pdo = new SblamPDO($dbcfg['dsn'],$dbcfg['user'], $dbcfg['pass']);
+    		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    		$pdo->exec("SET NAMES utf8");
+    	}
+    	catch(PDOException $e)
+    	{
+    	    if (!$max) throw $e;
+    		usleep(250000);
+    	}
 	}
 	return $pdo;
 }

@@ -185,7 +185,10 @@ class Admin
 
 try
 {
-	Admin::process(new SblamServices(sblambaseconnect()));
+    $config = Server::getDefaultConfig();
+    $services = new SblamServices(sblambaseconnect($config));
+
+	Admin::process($services);
 }
 catch(Exception $e)
 {

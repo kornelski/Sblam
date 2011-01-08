@@ -26,10 +26,13 @@ set_time_limit(20);
 require_once "dbconn.php";
 require_once "class/server.php";
 
-$services = new SblamServices(sblambaseconnect());
+
 
 try
 {
+    $config = Server::getDefaultConfig();
+    $services = new SblamServices(sblambaseconnect($config));
+
 	$server = new Server($services);
 	$server->process(new ServerRequest($services->getDB()));
 }
