@@ -149,7 +149,17 @@ function spam_init_list(lis, isspam)
 
 <tal:block metal:define-macro="formatpost"><li xmlns="http://www.w3.org/1999/xhtml" class="spam-entry" tal:attributes="id php:post instanceof SblamBasePost ? post.getPostId() : NULL">
 
-    <span class="worktime" tal:condition="post/worktime" tal:content="php:round(post.worktime/1000,1) . '\'s'"/>
+      <span class="spam-ips">
+        <tal:block tal:repeat="ip post/getAuthorIPs">
+          <tal:block tal:define="rev1 php:SblamURI::gethostbyaddr(ip); rev php: rev1 ? rev1 : ip">
+            <span tal:omit-tag="not:repeat/ip/start" title="${ip}"><em tal:omit-tag="repeat/ip/start" title="${ip} forwarded-for">
+${rev}
+              <a href="/admin/plonker/block/${php:urlencode(ip)}"> <img width="12" height="10" src="http://api.hostip.info/flag.php?ip=${php:urlencode(ip)}" /></a>
+            </em></span>
+          </tal:block>
+        </tal:block>
+      </span>
+
     <form action="" method="post">
       <tal:block tal:condition="php:post instanceof SblamBasePost">
         <p class="spam-buttons"><input type="hidden" name="id" value="${post/getPostId}"/><input type="submit" name="spam" value="Spam"/> <input type="submit" name="ham" value="Ham"/></p>
@@ -174,18 +184,10 @@ href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</
         <tr tal:repeat="dat headers"><th tal:content="php:ucwords(strtr(strtolower(preg_replace('!^HTTP_!','', repeat.dat.key )),'_','-'))"/><td tal:content="dat"/></tr>
       </table>
 
-      <span class="spam-ips">
-        <tal:block tal:repeat="ip post/getAuthorIPs">
-          <tal:block tal:define="rev1 php:SblamURI::gethostbyaddr(ip); rev php: rev1 ? rev1 : ip">
-            <span tal:omit-tag="not:repeat/ip/start" title="${ip}"><em tal:omit-tag="repeat/ip/start" title="${ip} forwarded-for">
-              <a href="/admin/plonker/block/${php:urlencode(ip)}"> <img width="12" height="10" src="http://api.hostip.info/flag.php?ip=${php:urlencode(ip)}" /></a> ${rev}
-            </em></span>
-          </tal:block>
-        </tal:block>
-      </span>
       <tal:block tal:condition="php:post instanceof SblamBasePost">
         <span class="id-acc"><a href="/admin/test/id/${post/getPostId}" title="test" tal:content="post/getPostId"/> <a tal:condition="post/account" title='list' href='/admin/autologin/account/${post/account}' tal:content="post/account"/> <a tal:condition="post/account" title='msg' href="/admin/accs/msg/${post/account}">✉</a></span>
         <p class="spam-reason" tal:content="structure php:PostFormatter::formatreason(post.getSpamReason())"/>
+	<span class="worktime" tal:condition="post/worktime" tal:content="php:round(post.worktime/1000,1) . '\'s'"/>
         <pre tal:condition="post/profiling" tal:content="post/profiling" />
       </tal:block>
     </form></li></tal:block>
