@@ -48,7 +48,7 @@ class PlonkerPage extends AdminPage
 
 	function blocklist($min = 6500)
 	{
-		$out = "# Spam sources identified by http://sblam.com.\n# Generated ".date('r')."\n# This is list of comment spammers. Do not use for e-mail blacklists!\n";
+		$out = "# HTTP spam sources identified by http://sblam.com.\n# Generated ".date('Y-m-d H:i:s')."\n# This is list of HTML forms spammers, not suitable for blocking e-mail spam!\n";
 		$n=0;
 		foreach($this->services->getDB()->query("/*maxtime20*/SELECT ip from plonker where
 ((added > now() - interval 1 month and spampoints > ".intval($min).") or (added > now() - interval 2 month and spampoints > ".intval(15*$min)."))
