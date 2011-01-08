@@ -26,8 +26,9 @@ class AdminPage
 	private $sblam;
 	protected $services;
 
-	function __construct(ISblamServices $services)
+	function __construct(array $config, ISblamServices $services)
 	{
+	    $this->config = $config;
 	    $this->services = $services;
     }
 
@@ -35,7 +36,7 @@ class AdminPage
 	{
 		if (!$this->sblam)
 		{
-			$this->sblam = new Sblam(Server::getDefaultConfig(), $this->services);
+			$this->sblam = new Sblam($this->config, $this->services);
 		}
 		return $this->sblam;
 	}
@@ -87,13 +88,13 @@ class Admin
 		return array('pagename'=>$pagename, 'args'=>$components);
 	}
 
-	public static function process(ISblamServices $services)
+	public static function process(array $config, ISblamServices $services)
 	{
 		$pageinf = self::parseURI($_SERVER['REQUEST_URI']);
 
 		try
 		{
-			$page = self::loadPage($pageinf['pagename'], $services);
+			$page = self::loadPage($pageinf['pagename'], $config, $services);
 
 			$res = $page->execute($pageinf['args']);
 			d($res,'res');
@@ -153,7 +154,7 @@ class Admin
 		}
 	}
 
-	private static function loadPage($name, ISblamServices $services)
+	private static function loadPage($name, array $config, ISblamServices $services)
 	{
 		if (!ctype_alnum($name)) throw new Exception("Invalid page name");
 
@@ -172,7 +173,7 @@ class Admin
 		$class = ucfirst($name).'Page';
 		if (!class_exists($class)) throw new Exception("Class $class not found");
 
-		$page = new $class($services);
+		$page = new $class($config, $services);
 
 		if (!$page instanceof AdminPage) throw new Exception("Not an admin page");
 
@@ -188,7 +189,7 @@ try
     $config = Server::getDefaultConfig();
     $services = new SblamServices(sblambaseconnect($config));
 
-	Admin::process($services);
+	Admin::process($config, $services);
 }
 catch(Exception $e)
 {

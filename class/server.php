@@ -320,19 +320,20 @@ class ServerRequest
 
 class Server
 {
-	private $db, $services;
+	private $db, $services, $config;
 
-	function __construct(ISblamServices $services)
+	function __construct(array $config, ISblamServices $services)
 	{
 		$this->db = $services->getDB();
+		$this->config = $config;
 		$this->services = $services;
 	}
 
 	static function getDefaultConfig($configfile = 'config.ini')
     {
-    	$ini = @parse_ini_file($configfile,true);
-    	if (!$ini) throw new Exception("Unable to read config file $configfile");
-    	return $ini;
+	$ini = @parse_ini_file($configfile,true);
+	if (!$ini) throw new Exception("Unable to read config file $configfile");
+	return $ini;
     }
 
 	function process(ServerRequest $req)
@@ -375,7 +376,7 @@ class Server
 			dieerr(500,"Awaria bazy danych");
 		}
 
-        $config = $req->customizeConfig(self::getDefaultConfig());
+        $config = $req->customizeConfig($this->config);
 
 		$sblam = new Sblam($config, $this->services);
 

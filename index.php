@@ -33,7 +33,7 @@ try
     $config = Server::getDefaultConfig();
     $services = new SblamServices(sblambaseconnect($config));
 
-	$server = new Server($services);
+	$server = new Server($config, $services);
 	$server->process(new ServerRequest($services->getDB()));
 }
 catch(ServerException $e)
