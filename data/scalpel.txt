@@ -1,6 +1,9 @@
+0.4: -za-darmo
 0.5: /------------------------+\s+\[url=/
 0.5: http://kredyt
 0.6: kredyty-
+3: Zarobek w Internecie
+0.5: DARMOWE KONTO
 3: l o c k e r z
 0.6: SEO company
 1: za.darmo.
@@ -12,6 +15,7 @@
 1: BETWAY
 3: betwayodds
 3: #file_links
+1: </a>, [url
 3: zarabiaj na reklamie
 0.5: NAPRAWDE WARTO!
 1: CHCESZ ZAROBIĆ?
@@ -23,6 +27,7 @@
 0.2: sms na numer
 3: dollars2surf
 0.1: 1.22(+VAT)
+0.6: SUPER OKAZJA
 3: nagrodanabank
 3: LOCKERZ
 1: WEJDŹ ZARÓB

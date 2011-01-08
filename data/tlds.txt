@@ -228,6 +228,7 @@ barreau.fr
 barum.no
 bashkiria.ru
 batsfjord.no
+bblog.pl
 bbs.tr
 bc.ca
 bd.se
@@ -932,6 +933,7 @@ freens.pl#freehost
 freewebs.com
 frei.no
 freight.aero
+friendster.com
 frogn.no
 froland.no
 from.hr
@@ -2112,6 +2114,7 @@ nx.cn
 ny.us
 nysa.pl
 o.se
+ocom.pl
 od.ua
 odda.no
 odessa.ua
@@ -2393,6 +2396,7 @@ porsanger.no
 porsangu.no
 porsgrunn.no
 port.fr
+posterous.com
 potenza.it
 powiat.pl
 poznan.pl
@@ -2599,6 +2603,7 @@ sci.eg
 scientist.aero
 scrapper-site.net
 scrapping.cc
+scribd.com
 sd.cn
 sd.us
 se.com
@@ -3064,6 +3069,7 @@ www.ro
 wy.us
 wz.cz
 x.se
+xaa.pl
 xanga.com
 xj.cn
 xn--andy-ira.no
@@ -3260,6 +3266,7 @@ z.la#tiny
 z.pl
 z.se
 za.com
+za.pl
 zachpomor.pl
 zagan.pl
 zakopane.pl

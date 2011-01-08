@@ -1,3 +1,4 @@
+block:kredyt-hipoteczny
 block:gsmdzwonki
 block:dzwonkigsm
 block:tranny
@@ -813,7 +814,7 @@ block:forced-sex
 block:foren/
 block:foren-dienst.de
 block:forensic1nursing
-block:forex-investments.info
+block:forex
 block:forex-trading-making-money.info
 block:forlutal
 block:formoterol
