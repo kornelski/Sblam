@@ -119,6 +119,35 @@ class ServerRequest
 		if (!count($this->ips)) $this->ips = array($this->data['ip']);
 	}
 
+	// PHP's filter_var doesn't support all ranges
+    private static function isPrivateOrReservedIP($ip_str)
+    {
+        static $ranges = array(
+            array('0.0.0.0', 8),
+            array('10.0.0.0', 8 ),
+            array('127.0.0.0', 8),
+            array('128.0.0.0', 16),
+            array('169.254.0.0', 16),
+            array('172.16.0.0', 12),
+            array('191.255.0.0', 16),
+            array('192.0.0.0', 24),
+            array('192.168.0.0', 16),
+            array('223.255.255.0', 24),
+        );
+
+        $ip = ip2long($ip_str);
+
+        foreach($ranges as $range)
+        {
+            $subnet = ip2long($range[0]);
+            $mask = (-1 << (32-$range[1])) & 0xFFFFFFFF;
+
+            if (($ip & $mask) === $subnet) return true;
+        }
+        return false;
+    }
+
+
 	/** extract all IPs from request headers
 
 		@param headers $_SERVER array
@@ -144,20 +173,12 @@ class ServerRequest
 			}
 		}
 
-		if (1||!function_exists('filter_var')) foreach($out as $ip => $whatever)
+		foreach($out as $ip => $whatever)
 		{
-			$ipn = ip2long($ip);
-			if (!$ipn || $ip === '127.0.0.1' || ($ipn&0xC0000000) === 0xC0000000 || (($ipn>>24)&0xFF)===10 || (($ipn>>24)&0xFF)===192 || $ip === $_SERVER['SERVER_ADDR'])
+			if (self::isPrivateOrReservedIP($ip))
 			{
 				//d($ip,'Unroutable IP - dropping');
 				unset($out[$ip]);
-			}
-		}
-		else foreach($out as $ip => $whatever)
-		{
-			if (false===filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE))
-			{
-				unset($out[$ip]);d($ip,"PHP says this IP is crap");
 			}
 		}
 
