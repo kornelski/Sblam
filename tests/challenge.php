@@ -57,13 +57,16 @@ class SblamTestChallenge extends SblamTestPost
 
             $authorips = $p->getAuthorIPs();
 
-            if ($postips[0] === $authorips[0]) $score += 4; // same IP, excellent
-            elseif (ip2long($postips[0]) >> 8 === ip2long($authorips[0]) >> 8)  // at least subnet must match (allows proxy farms)
+            if (count($postips) && count($authorips))
             {
-                $score++;
-                for($i=1; $i < count($postips); $i++) if (in_array($postips[$i], $authorips)) {d('forwarded host matches');$score++; break;}
-            }
-            else $score-=2;
+                if ($postips[0] === $authorips[0]) $score += 4; // same IP, excellent
+                elseif (ip2long($postips[0]) >> 8 === ip2long($authorips[0]) >> 8)  // at least subnet must match (allows proxy farms)
+                {
+                    $score++;
+                    for($i=1; $i < count($postips); $i++) if (in_array($postips[$i], $authorips)) {d('forwarded host matches');$score++; break;}
+                }
+                else $score-=2;
+			}
 
             if (!empty($posts[1]) && $posts[1] > $challengetime - self::TZ_TOLERANCE)
             {
