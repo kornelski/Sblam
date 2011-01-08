@@ -16,7 +16,7 @@ function sblambaseconnect(array $config)
     while(!$pdo && $max--)
     {
     	try {
-    		$pdo = new SblamPDO($dbcfg['dsn'],$dbcfg['user'], $dbcfg['pass']);
+    		$pdo = SblamPDO::create($dbcfg['dsn'],$dbcfg['user'], $dbcfg['pass']);
     		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     		$pdo->exec("SET NAMES utf8");
     	}

@@ -2,16 +2,11 @@
 
 class MainPage extends AdminPage
 {
-    private function getTables()
-    {
-        return $this->services->getDB()->query("/*maxtime10*/SHOW table status")->fetchAll(PDO::FETCH_ASSOC);
-    }
-
 	function index()
 	{
 		$pdo = $this->services->getDB();
 
-        $tables = $this->getTables();
+        $tables = $pdo->getTables();
 
         $tables_index = array();
         foreach($tables as $tabinfo)
@@ -32,7 +27,7 @@ class MainPage extends AdminPage
 		return array(
 		    'stats' => $stats,
 			'load'=>implode(", ",sys_getloadavg()),
-			'processes'=>$pdo->query("/*maxtime2*/SHOW processlist")->fetchAll(PDO::FETCH_ASSOC),
+			'processes'=>$pdo->getProcessList(),
 			'tablestatus'=>$tables,
 		);
 	}
