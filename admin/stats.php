@@ -22,11 +22,20 @@ class StatsPage extends AdminPage
 
     private function speedgraph()
     {
-        $res = $this->services->getDB()->query("select count(*) as  cnt , round(avg(worktime)/ 1000,1) as
- time , count(if(manualspam=0 or (manualspam is null and spamscore<=0),1,NULL)) as  hams ,
-count(if(manualspam=1 or (manualspam is null and spamscore>0),1,NULL)) as
- spams , ceil(log(worktime)*5 + sqrt(worktime)/100) as  grp  from posts_meta where id > (select max(id) from posts_meta)-15000
-and worktime is not null group by  grp  having  cnt  > 1 order by  grp  desc");
+        $res = $this->services->getDB()->query(
+        "SELECT
+            count(*) as cnt,
+            round(avg(worktime)/ 1000,1) as time,
+            count(if(manualspam=0 or (manualspam is null and spamscore<=0),1,NULL)) as hams,
+            count(if(manualspam=1 or (manualspam is null and spamscore>0),1,NULL)) as spams,
+            ceil(log(worktime)*5 + sqrt(worktime)/100) as grp
+        FROM posts_meta
+        WHERE id > (SELECT max(id) from posts_meta)-15000
+            AND worktime IS NOT NULL
+        GROUP BY grp
+        HAVING cnt  > 1
+        ORDER BY grp DESC");
+
         if (!$res) throw new Exception(implode('/',$pdo->errorInfo()));
 
         $res = $res->fetchAll(PDO::FETCH_ASSOC);
@@ -74,28 +83,33 @@ and worktime is not null group by  grp  having  cnt  > 1 order by  grp  desc");
     {
         $res = array();
 
-        $res['total'] = $this->q1("select count(*) from posts_meta");
-        $res['tempo'] = intval($this->q1("select round(count(*)/timestampdiff(hour, (select from_unixtime(timestamp) from posts_meta order by id limit 1), now())*24) from posts_meta"));
+        $res['total'] = $this->q1("SELECT count(*) FROM posts_meta");
+        $res['tempo'] = intval($this->q1(
+        "SELECT
+            round(count(*) / timestampdiff(hour,
+                (SELECT from_unixtime(timestamp) FROM posts_meta ORDER BY id LIMIT 1),
+                now())*24)
+        FROM posts_meta"));
 
-        $res['unverified'] = $this->q1("select count(*) from posts_meta where manualspam is null");
-        $res['tough'] = $this->q1("select count(*) from posts_meta where manualspam is null and (spamcert<110 or abs(spamscore)<110)");
+        $res['unverified'] = $this->q1("SELECT count(*) FROM posts_meta WHERE manualspam is NULL");
+        $res['tough'] = $this->q1("SELECT count(*) FROM posts_meta WHERE manualspam is NULL AND (spamcert<110 OR abs(spamscore)<110)");
 
-        $res['unadded'] = $this->q1("select count(*) from posts_meta where added is null or added =0");
+        $res['unadded'] = $this->q1("SELECT count(*) FROM posts_meta WHERE added is NULL OR added =0");
 
-        $res['hams'] = $this->q1("select count(*) from posts_meta where spamscore<0");
+        $res['hams'] = $this->q1("SELECT count(*) FROM posts_meta WHERE spamscore<0");
         $res['hamsprc'] = $res['total'] ? round($res['hams']*100/$res['total'],1) : 0;
 
-        $res['fhams'] = $this->q1("select count(*) from posts_meta where spamscore<0 and manualspam=1");
+        $res['fhams'] = $this->q1("SELECT count(*) FROM posts_meta WHERE spamscore<0 and manualspam=1");
 
         $res['phams'] = $res['hams'] ? round($res['fhams']*100/$res['hams'],2) : 0;
         //$res['bphams'] = $res['hams'] ? round($res['bfhams']*100/$res['hams'],2) : 0;
-        $res['spams'] = $this->q1("select count(*) from posts_meta where spamscore>0");
+        $res['spams'] = $this->q1("SELECT count(*) FROM posts_meta WHERE spamscore>0");
         $res['spamsprc'] = $res['total'] ? round($res['spams']*100/$res['total'],1) : 0;
-        $res['fspams'] = $this->q1("select count(*) from posts_meta where spamscore>0 and manualspam=0");
+        $res['fspams'] = $this->q1("SELECT count(*) FROM posts_meta WHERE spamscore>0 AND manualspam=0");
 
         $res['pspams'] = $res['spams'] ? round($res['fspams']*100/$res['spams'],2) : 0;
 
-        $res['totalsure'] = max(1,$this->q1("select count(*) from posts_meta where abs(spamcert) > 43 and abs(spamscore) > 36"));
+        $res['totalsure'] = max(1,$this->q1("SELECT count(*) FROM posts_meta WHERE abs(spamcert) > 43 AND abs(spamscore) > 36"));
 
         $res['accuracy'] = $res['total'] ? round(100-($res['fspams']+$res['fhams'])*100/$res['total'],2) : 0;
         $res['unsure'] = $res['total'] ? round(($res['total']-$res['totalsure'])*100/$res['total'],1) : 0;

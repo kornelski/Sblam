@@ -4,15 +4,20 @@ class AccsPage extends AdminPage
 {
     function index()
     {
+        $db = $this->services->getDB();
         return array(
-			'accounts'=>$this->services->getDB()->query("/*maxtime60*/SELECT account,apikey,accounts.email,
+			'accounts'=>$db->query("/*maxtime60*/".
+			"SELECT account, apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
-				(select count(*) from account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS,
-				(SELECT host from posts_data join posts_meta using(id) where account = accounts.id limit 1) as hosts
-				from posts_meta left join accounts on accounts.id=account group by account order by date desc,cnt")->fetchAll(PDO::FETCH_ASSOC),
+				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
+				(SELECT host FROM posts_data JOIN posts_meta using(id) WHERE account = accounts.id LIMIT 1) as hosts
+			FROM posts_meta
+			LEFT JOIN accounts ON accounts.id=account
+			GROUP BY account
+			ORDER BY date DESC,cnt")->fetchAll(PDO::FETCH_ASSOC),
 			'brief'=>true,
 			'title'=>'Accounts (brief)',
 		);
@@ -21,15 +26,18 @@ class AccsPage extends AdminPage
 	function detailed()
 	{
 		return array(
-			'accounts'=>$this->services->getDB()->query("/*maxtime360*/SELECT account,apikey,accounts.email,
+			'accounts'=>$this->services->getDB()->query("/*maxtime360*/".
+			"SELECT account,apikey,accounts.email,
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
-				(select count(*) from account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
+				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
 				substring(group_concat(distinct host separator ', '),1,100) as hosts,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS
-				FROM posts_meta join posts_data on posts_meta.id = posts_data.id left join accounts on accounts.id=account group by
-				coalesce(if(account>0,account,NULL),host) order by date desc,cnt")->fetchAll(PDO::FETCH_ASSOC),
+			FROM posts_meta JOIN posts_data on posts_meta.id = posts_data.id
+			LEFT JOIN accounts on accounts.id=account
+			GROUP BY coalesce(if(account>0,account,NULL),host)
+			ORDER BY date DESC,cnt")->fetchAll(PDO::FETCH_ASSOC),
 
 			'title'=>'Accounts (detailed)',
 		);

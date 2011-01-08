@@ -11,8 +11,11 @@ class LivePage extends AdminPage
 
 		    // MySQL is crap.
 		    // If I make it a dependent query and try to sort it on database side, all gets copied into temporary tables, even when SQL_SMALL_RESULT is added everywhere
-$sql = "/*maxtime=1*/SELECT SQL_SMALL_RESULT
                 posts_meta.id,from_unixtime(`timestamp`) as `time`,
+
+		$pdo = $this->services->getDB();
+        $sql = "/*maxtime=1*/".
+            "SELECT SQL_SMALL_RESULT
                 COALESCE(NULLIF(dnsrevcache.host,''),inet_ntoa(posts_meta.ip)) as ip,
                 concat(spamscore,'/',spamcert) as spamscore,
                 concat(posts_data.host,substring(path,1,50)) as path,
@@ -23,8 +26,6 @@ $sql = "/*maxtime=1*/SELECT SQL_SMALL_RESULT
             WHERE posts_meta.id >= $lastid
             ORDER BY posts_meta.id DESC
             LIMIT 30";
-
-		$pdo = $this->services->getDB();
 
 		$lastposts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
