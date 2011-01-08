@@ -41,7 +41,7 @@ class PlonkerPage extends AdminPage
 		}
 		$plonkerstats['recentips'] = $out;
 
-		$plonkerstats['byflags'] = $pdo->query("/*maxtime20*/SELECT count(*),sum(spampoints) as tot,sum(spampoints)/count(*) as avg,flags from plonker where spampoints < 100000 group by flags;")->fetchAll(PDO::FETCH_ASSOC);
+		$plonkerstats['byflags'] = $pdo->query("/*maxtime20*/SELECT count(*),sum(spampoints) as tot,avg(1-1000/(1000+spampoints)) as avg,flags from plonker where spampoints < 100000 group by flags;")->fetchAll(PDO::FETCH_ASSOC);
 
 		return $plonkerstats;
 	}
