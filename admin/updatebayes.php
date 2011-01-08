@@ -83,7 +83,8 @@ class UpdatebayesPage extends AdminPage
 
                     if (!$bayes->addPost($post, $isspam, $howmuch)) {$failures++;warn("Failed to add post ".$post->getPostId()); continue;}
 
-                    if (!$pdo->exec("/*maxtime15*/UPDATE posts_meta set added=1$howmuch where (added=0 or added is null) and id= '".addslashes($post->getPostId())."'"))
+                    if (!$pdo->exec("/*maxtime15*/UPDATE posts_meta set added=1$howmuch
+                                                    WHERE (added=0 or added is null) and id= '".addslashes($post->getPostId())."'"))
                     {
                         warn($post->getPostId(),"update of post failed");
                         break;
@@ -104,7 +105,7 @@ class UpdatebayesPage extends AdminPage
                 $wait += $load;
                 $this->ping();
 
-                echo "#$done; $failures fail; id{$res['id']}; score {$spamscore} * $howmuch; load {$load}; wait ".round(0.1*$wait,1)."\n<br>"; flush();
+        		echo "#$done; $failures fail; id{$res['id']}; score {$spamscore} * $howmuch; load {$load}; wait ".round(0.1*$wait,1)."\n<br>"; flush();
                 usleep(100000 * $load);
             }
 

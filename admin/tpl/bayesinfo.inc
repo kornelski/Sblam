@@ -18,16 +18,16 @@
 <p tal:condition="php:total['ham']+total['spam']">Database is built from ${php:total['ham'] + total['spam']} posts (${totalwordsf} words), of which ${totalspamf} (${php:round(100* total['spam']/(total['ham']+total['spam']),1)}%) are spam</p>
 
 <tal:block metal:define-macro="bayestable">
-  
+
   <table class="wordlist"><caption tal:content="caption"/>
-  
+
   <tr tal:condition="not:table" class="wordlist-empty"><td>Empty</td></tr>
   <tr tal:condition="table">
     <th tal:condition="exists:rating">Rating</th>
     <th>Word</th><th>Popular</th>
   </tr>
   <tr tal:repeat="word table" class="${php:(word['rate']<-0.1?'word-ham':(word['rate']>0.1?'word-spam':''))}  ${php:(abs(word['rate'])>0.6?'strong':'')}">
-      
+
       <td tal:condition="exists:rating" class="rating">${php:round(abs(100*word['rate']))}% <span tal:content="php:word['rate']<0?'ham':'spam'"/></td>
       <td class="the-word">
       <a tal:condition="exists:showkill" href="/admin/${pagename}/neuter/${word/wordh}">&darr;</a>

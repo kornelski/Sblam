@@ -1,7 +1,7 @@
 <?php
 
 class SblamTestDroneBL extends SblamTestDNSBL
-{	
+{
     static $dnsrbls;
 
 	function __construct()
@@ -32,7 +32,7 @@ class SblamTestDroneBL extends SblamTestDNSBL
 		                       'sender'=>array(0.1,self::CERTAINITY_LOW, "Sender in drone Uncategorized")),
 		);
 	}
-	
+
 	function score($ip, $resip, $reason, $scorefactor)
 	{
 		if (isset(self::$dnsrbls[$resip]) && isset(self::$dnsrbls[$resip][$reason]))
@@ -43,7 +43,7 @@ class SblamTestDroneBL extends SblamTestDNSBL
 			return $tempout;
 		}
 	}
-	
+
 	static function info()
 	{
 		return array(

@@ -164,8 +164,8 @@ function spam_init_list(lis, isspam)
       <tal:block tal:condition="php:post.getAuthorURI() or post.getAuthorEmail()">
         (
         <tal:block tal:condition="post/getAuthorURI" tal:content="structure php:PostFormatter::highlight(post.getAuthorURI())"/>
-        <tal:block tal:condition="post/getAuthorEmail"><x tal:replace="'; '" tal:condition="post/getAuthorURI"/> 
-${structure php:PostFormatter::highlight(post.getAuthorEmail())} <a 
+        <tal:block tal:condition="post/getAuthorEmail"><x tal:replace="'; '" tal:condition="post/getAuthorURI"/>
+${structure php:PostFormatter::highlight(post.getAuthorEmail())} <a
 href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</a></tal:block>
         )
       </tal:block>
@@ -197,7 +197,7 @@ href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</
 
 <div id="spam-score-lists">
   <div id="spam-list">
-    <form method="post" action=""><h3>Spams <input type="submit" name="bannedspams" value="Remove banned" /> <input type="submit" name="bannedspamslite" value="Sort banned" 
+    <form method="post" action=""><h3>Spams <input type="submit" name="bannedspams" value="Remove banned" /> <input type="submit" name="bannedspamslite" value="Sort banned"
 /></h3></form>
     <tal:block metal:use-macro="queue" tal:define="queue spams" />
   </div>
@@ -212,7 +212,7 @@ href="/admin/bayeslinks/kill/${php:urlencode(post.getAuthorEmail())}">&#x2620;</
     spam_init_list(document.getElementById('ham-list').getElementsByTagName('li'), false);
 
 	document.addEventListener('keypress',function(e){
-		if (e.keyCode == 104 || e.keyCode == 115) 
+		if (e.keyCode == 104 || e.keyCode == 115)
 		{
 			var isspam = e.keyCode==115;
 			var el,form,list = isspam ? 'spam-list' : 'ham-list';

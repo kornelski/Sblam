@@ -19,7 +19,7 @@
 <form action="/admin/classifyips" method="post" tal:condition="exists:byflags">
     <tal:block metal:use-macro="tables.inc/table" tal:define="table byflags" />
     <input type="submit" value="Update" />
-</form>    
+</form>
 
 
 

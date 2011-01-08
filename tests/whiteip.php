@@ -14,11 +14,11 @@ class SblamTestWhiteip extends SblamTestPost
 	{
         $isWhiteIP = false;
         $out = array();
-        
+
 		foreach($p->getAuthorIPs() as $ip)
 		{
 			if( array_search($ip, $this->whitelist) !== false ) {
-			    $isWhiteIP = true;   
+			    $isWhiteIP = true;
 			} else {
 			    $isWhiteIP = false;
 			}
@@ -27,7 +27,7 @@ class SblamTestWhiteip extends SblamTestPost
 		if( $isWhiteIP ) {
 		    $out[] = array(-1.0, self::CERTAINITY_HIGH, "Sent from whitelisted IP");
 		}
-		
+
 		return $out;
 	}
 

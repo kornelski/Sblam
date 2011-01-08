@@ -24,7 +24,7 @@
 	.plaintable td {border:0;padding:1px 2px 2px}
 	.plaintable th {border-bottom:1px solid #aaa;padding:1px 0 1px;font-size:0.9em;font-family:"arial narrow",arial,sans-serif;font-weight:normal;}
 
-	.plaintable tr:nth-child(even) td {background:#f0f0ff;}	
+	.plaintable tr:nth-child(even) td {background:#f0f0ff;}
 	.plaintable td:nth-child(even) {background:#f8f8f8;}
 	.plaintable tr:nth-child(even) td:nth-child(even) {background:#e8e8fa;}
 

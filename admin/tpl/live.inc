@@ -8,7 +8,7 @@
  #lastposts td:first-child + td,
  #lastposts td:first-child + td + td ,
  #lastposts td:first-child + td + td + td + td {text-align:left; white-space:nowrap;}
- #lastposts td:first-child + td + td + td + td + td + td + td 
+ #lastposts td:first-child + td + td + td + td + td + td + td
 {text-align:left;font-family:"Arial Narrow",sans-serif;font-size:9px;line-height:1;padding:0 0 0 2px;vertical-align:middle}
 
 tr.new {background:#ffe;}
@@ -37,7 +37,7 @@ var processresult = function(serv,result)
 	var load = document.getElementById('load');
 
 	load.replaceChild(document.createTextNode(result.sysload.toString() + ' ' + updno),load.firstChild);
-	
+
 	var minnullid = serv.lastid+9999999;
 	var j,lps = result.lastposts;
 	for(j=lps.length-1; j >= 0; j--)
@@ -114,25 +114,25 @@ var update = function()
 	for(i=0; i < servers.length; i++)
 	{
 		serv = servers[i];
-		
+
 		var xhr = new XMLHttpRequest();
-		
+
 		if (!serv.lastid) serv.lastid=0;
-		
-		xhr.open('GET',serv.host + '/admin/live/json/' + serv.lastid, true);	
+
+		xhr.open('GET',serv.host + '/admin/live/json/' + serv.lastid, true);
 		xhr.onreadystatechange = function()
 		{
 			if (xhr.readyState == 4 && xhr.status==200)
 			{
 				updno++;
 				eval('var result = ' + xhr.responseText);
-				
+
 				var freq = processresult(serv,result);
-				
+
 				setTimeout(update, freq? 1500 : 3000);
 			}
 		}
-		xhr.send();	
+		xhr.send();
 	}
 
 };

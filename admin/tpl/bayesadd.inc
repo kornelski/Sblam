@@ -6,8 +6,8 @@
 	<p tal:condition="addtext">Added words</p>
 	<p tal:condition="linksadded">Added links: <tal:block tal:repeat="l linksadded">${l} </tal:block></p>
 
-	<p tal:condition="spamvertresult">Links scored ${php:round(spamvertresult[0],2)} with cert ${php:round(spamvertresult[1],2)} for ${spamvertresult/3}</p>	
-	<p tal:condition="bayesresult">Words scored ${php:round(bayesresult[0],2)} with cert ${php:round(bayesresult[1],2)} for ${bayesresult/3}</p>	
+	<p tal:condition="spamvertresult">Links scored ${php:round(spamvertresult[0],2)} with cert ${php:round(spamvertresult[1],2)} for ${spamvertresult/3}</p>
+	<p tal:condition="bayesresult">Words scored ${php:round(bayesresult[0],2)} with cert ${php:round(bayesresult[1],2)} for ${bayesresult/3}</p>
 </tal:block>
 
 <h2>Add words/links</h2>

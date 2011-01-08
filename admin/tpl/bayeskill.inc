@@ -7,7 +7,7 @@
 </style>
 
 
-<p class="head"><strong tal:content="word | wordh" /> is <em tal:content="spam"/> spam vs 
+<p class="head"><strong tal:content="word | wordh" /> is <em tal:content="spam"/> spam vs
 <em tal:content="ham"/> ham.</p>
 
 
