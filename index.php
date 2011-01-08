@@ -36,5 +36,12 @@ try
 catch(ServerException $e)
 {
 	header("HTTP/1.1 ".$e->getCode()." ".$e->getMessage());
+	header("Content-Type: text/plain;charset=UTF-8");
 	die($e->getMessage());
+}
+catch(Exception $e)
+{
+    header("HTTP/1.1 500 err");
+	header("Content-Type: text/plain;charset=UTF-8");
+	if (ini_get('display_errors')) die($e->getMessage()); else die("Error");
 }

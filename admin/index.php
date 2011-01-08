@@ -190,7 +190,7 @@ try
 catch(Exception $e)
 {
 	header('HTTP/1.1 500 ERR');
-	echo $e;
+	header("Content-Type: text/plain;charset=UTF-8");
+	if (ini_get('display_errors')) echo $e; else echo "Error";
 	warn($e,"Died");
 }
-
