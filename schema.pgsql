@@ -100,12 +100,12 @@ CREATE OR REPLACE FUNCTION bayeswordsh_i() RETURNS trigger AS
 $BODY$
     BEGIN
         UPDATE bayeswordsh_s SET spam=NEW.spam, ham=NEW.ham, added=NEW.added WHERE wordh = NEW.wordh;
-        IF NOT FOUND THEN 
+        IF NOT FOUND THEN
             BEGIN
                 INSERT INTO bayeswordsh_s(wordh,spam,ham,added) VALUES (NEW.wordh,NEW.spam,NEW.ham,NEW.added);
             EXCEPTION WHEN unique_violation THEN
                 -- do nothing
-            END;    
+            END;
         END IF;
     END;
 $BODY$
@@ -223,12 +223,12 @@ CREATE OR REPLACE FUNCTION linkswordsh_i() RETURNS trigger AS
 $BODY$
     BEGIN
         UPDATE linkswordsh_s SET spam=NEW.spam, ham=NEW.ham, added=NEW.added WHERE wordh = NEW.wordh;
-        IF NOT FOUND THEN 
+        IF NOT FOUND THEN
             BEGIN
                 INSERT INTO linkswordsh_s(wordh,spam,ham,added) VALUES (NEW.wordh,NEW.spam,NEW.ham,NEW.added);
             EXCEPTION WHEN unique_violation THEN
                 -- do nothing
-            END;    
+            END;
         END IF;
     END;
 $BODY$
@@ -381,3 +381,18 @@ CREATE AGGREGATE group_concat (
 	STYPE = text
 );
 
+-- DAY()
+CREATE OR REPLACE FUNCTION day(timestamp without time zone)
+RETURNS integer AS $$
+  SELECT EXTRACT(DAY FROM DATE($1))::integer
+$$ IMMUTABLE STRICT LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION hour(timestamp without time zone)
+RETURNS integer AS $$
+  SELECT EXTRACT (HOUR FROM $1)::integer
+$$ IMMUTABLE STRICT LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION unix_timestamp(timestamp with time zone)
+RETURNS bigint AS $$
+  SELECT EXTRACT(EPOCH FROM $1)::bigint
+$$ VOLATILE LANGUAGE SQL;
