@@ -28,7 +28,14 @@ class PlonkerPage extends AdminPage
 		$plonkerstats['topips'] = $out;
 
 		$out = array();
-		foreach($pdo->query("/*maxtime20*/SELECT  ip,flags ,count(*) as  cnt ,sum( spampoints ) as  spampoints , max( added ) as  added  from plonker group by  ip >>10 order by  cnt  desc, spampoints,ip  limit 100") as $row)
+		foreach($pdo->query("/*maxtime20*/".
+		    "SELECT  ip,flags ,count(*) as  cnt,
+		        sum( spampoints ) as  spampoints,
+		        max( added ) as  added
+		     FROM plonker
+		     GROUP BY  ip >>10
+		     ORDER BY  cnt  DESC, spampoints,ip
+		     LIMIT 100") as $row)
 		{
 			$out[] = $row;
 		}
@@ -41,20 +48,31 @@ class PlonkerPage extends AdminPage
 		}
 		$plonkerstats['recentips'] = $out;
 
-		$plonkerstats['byflags'] = $pdo->query("/*maxtime20*/SELECT count(*),sum(spampoints) as tot,avg(1-1000/(1000+spampoints)) as avg,flags from plonker where spampoints < 100000 group by flags;")->fetchAll(PDO::FETCH_ASSOC);
+		$plonkerstats['byflags'] = $pdo->query("/*maxtime20*/".
+		    "SELECT count(*),sum(spampoints) as tot,
+		        avg(1-1000/(1000+spampoints)) as avg,
+		        flags
+		     FROM plonker
+		     WHERE spampoints < 100000
+		     GROUP BY flags;")->fetchAll(PDO::FETCH_ASSOC);
 
 		return $plonkerstats;
 	}
 
 	function blocklist($min = 6500)
 	{
-		$out = "# HTTP spam sources identified by http://sblam.com.\n# Generated ".date('Y-m-d H:i:s')."\n# This is list of HTML forms spammers, not suitable for blocking e-mail spam!\n";
-		$n=0;
-		foreach($this->services->getDB()->query("/*maxtime20*/SELECT ip from plonker where
-((added > now() - interval 1 month and spampoints > ".intval($min).") or (added > now() - interval 2 month and spampoints > ".intval(15*$min)."))
- and ip > (11<<24) order by ip
+		$out = "# HTTP spam sources identified by http://sblam.com.\n# Generated ".date('Y-m-d H:i:s').
+		     "\n# This is list of HTML forms spammers, not suitable for blocking e-mail spam!\n";
 
-") as $r)
+        $min = intval($min);
+        $two_month_min = 15*$min;
+		$n=0;
+		foreach($this->services->getDB()->query("/*maxtime20*/".
+		    "SELECT ip FROM plonker
+ 		     WHERE ((added > now() - interval 1 month AND spampoints > $min)
+		         OR (added > now() - interval 2 month AND spampoints > $two_month_min))
+		     AND ip > (11<<24)
+		     ORDER BY ip") as $r)
 		{
 			$ip = long2ip($r['ip']);
 			$out .= $ip."\n";
@@ -92,7 +110,7 @@ class PlonkerPage extends AdminPage
 		{
 			$add=1;
 			$this->increaseCertainityByIP($ips);
-			$q = "/*maxtime10*/INSERT into plonker (`ip`,`spampoints`,`added`) values".substr(str_repeat("(?,26000,now()),", count($ips)),0,-1).
+			$q = "/*maxtime10*/"."INSERT into plonker (`ip`,`spampoints`,`added`) values".substr(str_repeat("(?,26000,now()),", count($ips)),0,-1).
 					 " on duplicate key update `spampoints` = `spampoints` * 2 + 22000,`added` = now()";
 		}
 		else
