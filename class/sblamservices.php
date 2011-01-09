@@ -1,5 +1,6 @@
 <?php
 
+require_once "class/sblamhttp.php";
 
 class SblamServices implements ISblamServices
 {
