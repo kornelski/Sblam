@@ -54,7 +54,11 @@ class SblamBase
 	function getUnmoderatedRange($isspam, $start = 0, $count = 5)
 	{
 		$sign = $isspam ? '>' : '<=';
-		$q = "SELECT * from posts_meta left join posts_data on posts_meta.id = posts_data.id where spamscore $sign 0 and manualspam is null order by spamcert limit $start,$count";
+		$q = "SELECT * from posts_meta
+		        LEFT JOIN posts_data on posts_meta.id = posts_data.id
+		        WHERE spamscore $sign 0 AND manualspam IS NULL
+		        ORDER BY spamcert
+		        LIMIT $count OFFSET $start";
 		return $this->query($q);
 	}
 
@@ -163,7 +167,7 @@ class SblamBase
 
 	function saveTestResult(SblamBasePost $p)
 	{
-		$prep = $this->db->prepare("UPDATE posts_meta set spamscore = ?, spamcert = ?, added = ? where id = ?");
+		$prep = $this->db->prepare("UPDATE posts_meta SET spamscore = ?, spamcert = ?, added = ? WHERE id = ?");
 		if (!$prep) {warn($this->db->errorInfo());throw new Exception("pdo failed");}
 
 		list($score,$cert) = $p->getSpamScore();
