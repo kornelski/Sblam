@@ -33,7 +33,7 @@ class StatsPage extends AdminPage
         WHERE id > (SELECT max(id) from posts_meta)-15000
             AND worktime IS NOT NULL
         GROUP BY grp
-        HAVING cnt  > 1
+        HAVING count(*)  > 1
         ORDER BY grp DESC");
 
         if (!$res) throw new Exception(implode('/',$pdo->errorInfo()));
@@ -83,12 +83,15 @@ class StatsPage extends AdminPage
     {
         $res = array();
 
+        $db = $this->services->getDB();
+
         $res['total'] = $this->q1("SELECT count(*) FROM posts_meta");
         $res['tempo'] = intval($this->q1(
         "SELECT
-            round(count(*) / timestampdiff(hour,
-                (SELECT from_unixtime(timestamp) FROM posts_meta ORDER BY id LIMIT 1),
-                now())*24)
+            round(count(*) / {$db->timestampdiff('hour',
+                '(SELECT from_unixtime(timestamp) FROM posts_meta ORDER BY id LIMIT 1)',
+                'now()')}
+                )*24
         FROM posts_meta"));
 
         $res['unverified'] = $this->q1("SELECT count(*) FROM posts_meta WHERE manualspam is NULL");

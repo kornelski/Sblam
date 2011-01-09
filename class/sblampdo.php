@@ -18,6 +18,8 @@ abstract class SblamPDO extends PDO
 
     abstract function getTables();
     abstract function getProcesslist();
+
+    abstract function timestampdiff($interval,$arg1,$arg2);
 }
 
 class SblamMysqlPDO extends SblamPDO
@@ -31,6 +33,8 @@ class SblamMysqlPDO extends SblamPDO
     {
         return $this->query("/*maxtime2*/SHOW processlist")->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    function timestampdiff($interval,$arg1,$arg2) {return "timestampdiff($interval, $arg1, $arg2)";}
 }
 
 class SblamPgsqlPDO extends SblamPDO
@@ -44,4 +48,6 @@ class SblamPgsqlPDO extends SblamPDO
     {
         return array();
     }
+
+    function timestampdiff($interval,$arg1,$arg2) {return "timestampdiff('$interval', $arg1, $arg2)";}
 }
