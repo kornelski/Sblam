@@ -12,7 +12,7 @@ class AccsPage extends AdminPage
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS,
-				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
+				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND \"read\" = 'N') as unread,
 				(SELECT host FROM posts_data JOIN posts_meta using(id) WHERE account = accounts.id LIMIT 1) as hosts
 			FROM posts_meta
 			LEFT JOIN accounts ON accounts.id=account
@@ -31,7 +31,7 @@ class AccsPage extends AdminPage
 				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
-				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND `read` = 'N') as `unread`,
+				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND \"read\" = 'N') as unread,
 				substring(group_concat(distinct host separator ', '),1,100) as hosts,
 				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS
 			FROM posts_meta JOIN posts_data on posts_meta.id = posts_data.id
@@ -64,7 +64,7 @@ class AccsPage extends AdminPage
 	        'textarea' => $textarea,
 	        'msgid' => $msgid,
 	        'account' => $account,
-	        'inbox' => $this->services->getDB()->query("SELECT * FROM account_messages WHERE account = '$acc' ORDER BY `read`,`sent`,`type`")->fetchAll(PDO::FETCH_ASSOC),
+	        'inbox' => $this->services->getDB()->query("SELECT * FROM account_messages WHERE account = '$acc' ORDER BY \"read\",sent,\"type\"")->fetchAll(PDO::FETCH_ASSOC),
 	        'page_template'=>'accmsg',
 	    );
     }
@@ -76,7 +76,7 @@ class AccsPage extends AdminPage
 
         if (isset($_POST['read']))
         {
-           $this->services->getDB()->exec("UPDATE account_messages SET `read` = IF(`read` = 'Y','N','Y') WHERE id = ".intval($_POST['read']));
+           $this->services->getDB()->exec("UPDATE account_messages SET \"read\" = IF(\"read\" = 'Y','N','Y') WHERE id = ".intval($_POST['read']));
         }
         else if (isset($_POST['delete']))
         {

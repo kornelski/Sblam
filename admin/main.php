@@ -50,12 +50,12 @@ class MainPage extends AdminPage
 
         if (!$minid) throw new Exception("Can't find ID of oldest post to archive");
 
-        $info = $this->query1("/*maxtime5*/SELECT `timestamp`,added as bayes_added FROM posts_meta WHERE id >= $minid LIMIT 1");
+        $info = $this->query1("/*maxtime5*/SELECT \"timestamp\",added as bayes_added FROM posts_meta WHERE id >= $minid LIMIT 1");
         if (!$info) throw new Exception("Can't find info on oldest post id $minid");
 
-        $moved = $this->services->getDB()->exec("/*maxtime710*/INSERT INTO postsarchive(id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies, session,host,hostip,`path`,added,post,chcookie,worktime,account,profiling)
+        $moved = $this->services->getDB()->exec("/*maxtime710*/INSERT INTO postsarchive(id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,\"timestamp\",headers,cookies, session,host,hostip,\"path\",added,post,chcookie,worktime,account,profiling)
             SELECT
-posts_meta$suffix.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,`timestamp`,headers,cookies,session,host,hostip,`path`,
+posts_meta$suffix.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,\"timestamp\",headers,cookies,session,host,hostip,\"path\",
 added,post,chcookie,worktime,account,profiling
                 FROM posts_meta$suffix LEFT JOIN posts_data$suffix ON posts_meta$suffix.id = posts_data$suffix.id
                 WHERE posts_meta$suffix.id < $minid");

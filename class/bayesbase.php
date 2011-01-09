@@ -91,7 +91,7 @@ class BayesBase
 
 	function getTotalWords()
 	{
-		$total = $this->db->query("/*maxtime20*/SELECT count(*) as `cnt` from {$this->table}wordsh"); if (!$total) return;
+		$total = $this->db->query("/*maxtime20*/SELECT count(*) as cnt from {$this->table}wordsh"); if (!$total) return;
 		$total = $total->fetchAll(PDO::FETCH_ASSOC);  if (!count($total)) {return;}
 		return $total[0]['cnt'];
 	}

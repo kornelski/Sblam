@@ -110,8 +110,8 @@ class PlonkerPage extends AdminPage
 		{
 			$add=1;
 			$this->increaseCertainityByIP($ips);
-			$q = "/*maxtime10*/"."INSERT into plonker (`ip`,`spampoints`,`added`) values".substr(str_repeat("(?,26000,now()),", count($ips)),0,-1).
-					 " on duplicate key update `spampoints` = `spampoints` * 2 + 22000,`added` = now()";
+			$q = "/*maxtime10*/"."INSERT into plonker (ip,spampoints,added) values".substr(str_repeat("(?,26000,now()),", count($ips)),0,-1).
+					 " on duplicate key update spampoints = spampoints * 2 + 22000,added = now()";
 		}
 		else
 		{
