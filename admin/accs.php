@@ -8,15 +8,15 @@ class AccsPage extends AdminPage
         return array(
 			'accounts'=>$db->query("/*maxtime60*/".
 			"SELECT account, apikey,accounts.email,
-				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
+				(round(count(if(spamscore>0,1,NULL))/count(*)*100) || '%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
-				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS,
+				coalesce(created,from_unixtime(min(\"timestamp\"))) as date, coalesce(script||'','-') as \"JS\",
 				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND \"read\" = 'N') as unread,
 				(SELECT host FROM posts_data JOIN posts_meta using(id) WHERE account = accounts.id LIMIT 1) as hosts
 			FROM posts_meta
 			LEFT JOIN accounts ON accounts.id=account
-			GROUP BY account
+			GROUP BY account,apikey,accounts.email,accounts.created,accounts.script,accounts.id
 			ORDER BY date DESC,cnt")->fetchAll(PDO::FETCH_ASSOC),
 			'brief'=>true,
 			'title'=>'Accounts (brief)',
@@ -28,15 +28,15 @@ class AccsPage extends AdminPage
 		return array(
 			'accounts'=>$this->services->getDB()->query("/*maxtime360*/".
 			"SELECT account,apikey,accounts.email,
-				concat(round(count(if(spamscore>0,1,NULL))/count(*)*100),'%') as spams,
+				(round(count(if(spamscore>0,1,NULL))/count(*)*100) || '%') as spams,
 				count(*) as cnt,
 				count(if(spamscore<0,1,NULL)) as ham,
 				(SELECT count(*) FROM account_messages WHERE account = accounts.id AND \"read\" = 'N') as unread,
-				substring(group_concat(distinct host separator ', '),1,100) as hosts,
-				coalesce(created,from_unixtime(min(timestamp))) as date, coalesce(script,'-') as JS
+				substring(group_concat(distinct host),1,100) as hosts,
+			    coalesce(created,from_unixtime(min(\"timestamp\"))) as date, coalesce(script||'','-') as \"JS\"
 			FROM posts_meta JOIN posts_data on posts_meta.id = posts_data.id
 			LEFT JOIN accounts on accounts.id=account
-			GROUP BY coalesce(if(account>0,account,NULL),host)
+			GROUP BY if(account>0,account||'',host),account,apikey,accounts.email,accounts.id,accounts.created,accounts.script
 			ORDER BY date DESC,cnt")->fetchAll(PDO::FETCH_ASSOC),
 
 			'title'=>'Accounts (detailed)',

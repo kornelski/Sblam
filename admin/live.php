@@ -14,15 +14,15 @@ class LivePage extends AdminPage
 
 		$pdo = $this->services->getDB();
         $sql = "/*maxtime=1*/".
-            "SELECT SQL_SMALL_RESULT
+            "SELECT
                 posts_meta.id,from_unixtime(\"timestamp\") as \"time\",
                 COALESCE(NULLIF(dnsrevcache.host,''),inet_ntoa(posts_meta.ip)) as ip,
-                concat(spamscore,'/',spamcert) as spamscore,
-                concat(posts_data.host,substring(path,1,50)) as path,
-                concat(round(worktime/1000,1),'s') as work,
+                (spamscore || '/' || spamcert) as spamscore,
+                (posts_data.host || substring(path,1,50)) as path,
+                (round(worktime/1000,1) || 's') as work,
                 added,spamreason
-            FROM posts_meta FORCE INDEX FOR ORDER BY (primary) INNER JOIN posts_data FORCE INDEX (id) USING(id)
-            LEFT JOIN dnsrevcache FORCE INDEX (primary) USING(ip)
+            FROM posts_meta INNER JOIN posts_data USING(id)
+            LEFT JOIN dnsrevcache USING(ip)
             WHERE posts_meta.id >= $lastid
             ORDER BY posts_meta.id DESC
             LIMIT 30";
