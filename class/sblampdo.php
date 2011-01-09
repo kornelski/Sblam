@@ -16,6 +16,8 @@ abstract class SblamPDO extends PDO
 		return $statement;
     }
 
+    function initConnection() {}
+
     abstract function getTables();
     abstract function getProcesslist();
 
@@ -24,6 +26,12 @@ abstract class SblamPDO extends PDO
 
 class SblamMysqlPDO extends SblamPDO
 {
+    function initConnection()
+    {
+        $this->exec("SET SESSION sql_mode='ANSI'");
+		$this->exec("SET NAMES utf8");
+    }
+
     function getTables()
     {
         return $this->query("/*maxtime10*/SHOW table status")->fetchAll(PDO::FETCH_ASSOC);
