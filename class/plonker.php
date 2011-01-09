@@ -21,7 +21,15 @@ class Plonker
 	{
 		if (!count($ips)) return;
 
-		$prep = $this->db->prepare("/*maxtime=5*/SELECT count(if(ip=?,1,NULL)) as exact, count(*) as cnt, sum(if(ip=?,55000+100*spampoints,5500+10*spampoints*{$this->subnetrelevance})/(60000+abs(time_to_sec(timediff(now(),added))))) as total from {$this->table} where ip between ? and ?");
+		$prep = $this->db->prepare("/*maxtime=5*/".
+		    "SELECT count(if(ip=?,1,NULL)) as exact,
+    		    count(*) as cnt,
+    		    sum(if(ip=?,
+    		            55000+100*spampoints,
+    		            5500+10*spampoints*{$this->subnetrelevance})
+    		        /(60000+abs(time_to_sec(timediff(now(),added))))) as total
+		     FROM {$this->table}
+		     WHERE ip BETWEEN ? AND ?");
 
 		if (!$prep) {warn($this->db->errorInfo(),"prepare failed");return NULL;}
 

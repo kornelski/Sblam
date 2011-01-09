@@ -77,7 +77,7 @@ CREATE TABLE "bayeswordsh" (
   "wordh" bytea /*16*/ NOT NULL,
   "ham" INTEGER NOT NULL DEFAULT 0,
   "spam" INTEGER NOT NULL DEFAULT 0,
-  "added" INTEGER NOT NULL DEFAULT date_part('epoch',NOW()),
+  "added" timestamp without time zone NOT NULL DEFAULT NOW(),
   "flags" "char" NOT NULL,
   PRIMARY KEY ("wordh")
 );
@@ -91,7 +91,7 @@ CREATE TABLE "bayeswordsh_s" (
   "wordh" bytea /*16*/ NOT NULL,
   "ham" INTEGER NOT NULL DEFAULT 0,
   "spam" INTEGER NOT NULL DEFAULT 0,
-  "added" INTEGER NOT NULL DEFAULT date_part('epoch',NOW()),
+  "added" timestamp without time zone NOT NULL DEFAULT NOW(),
   PRIMARY KEY ("wordh")
 );
 
@@ -200,7 +200,7 @@ CREATE TABLE "linkswordsh" (
   "wordh" bytea /*16*/ NOT NULL,
   "ham" INTEGER NOT NULL DEFAULT 0,
   "spam" INTEGER NOT NULL DEFAULT 0,
-  "added" INTEGER NOT NULL DEFAULT date_part('epoch',NOW()),
+  "added" timestamp without time zone NOT NULL DEFAULT NOW(),
   "flags" "char" NOT NULL,
   PRIMARY KEY ("wordh")
 );
@@ -214,7 +214,7 @@ CREATE TABLE "linkswordsh_s" (
   "wordh" bytea /*16*/ NOT NULL,
   "ham" INTEGER NOT NULL DEFAULT 0,
   "spam" INTEGER NOT NULL DEFAULT 0,
-  "added" INTEGER NOT NULL DEFAULT date_part('epoch',NOW()),
+  "added" timestamp without time zone NOT NULL DEFAULT NOW(),
   PRIMARY KEY ("wordh")
 );
 
@@ -245,7 +245,7 @@ DROP TABLE IF EXISTS "plonker";
 CREATE TABLE "plonker" (
   "ip" INTEGER NOT NULL,
   "spampoints" INTEGER NOT NULL,
-  "added" INTEGER NOT NULL DEFAULT date_part('epoch',NOW()),
+  "added" timestamp without time zone NOT NULL DEFAULT NOW(),
   "flags" INTEGER NOT NULL, /* set('dul','nodul','wild','nowild') */
   PRIMARY KEY ("ip")
 );
@@ -396,3 +396,8 @@ CREATE OR REPLACE FUNCTION unix_timestamp(timestamp with time zone)
 RETURNS bigint AS $$
   SELECT EXTRACT(EPOCH FROM $1)::bigint
 $$ VOLATILE LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION timediff(timestamp with time zone, timestamp without time zone)
+RETURNS interval AS $$
+  SELECT $1::timestamp without time zone - $2
+$$ IMMUTABLE STRICT LANGUAGE SQL;
