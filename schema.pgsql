@@ -401,3 +401,14 @@ CREATE OR REPLACE FUNCTION timediff(timestamp with time zone, timestamp without 
 RETURNS interval AS $$
   SELECT $1::timestamp without time zone - $2
 $$ IMMUTABLE STRICT LANGUAGE SQL;
+
+-- INET_NTOA()
+-- done in SQL to take advantage of inlining
+CREATE OR REPLACE FUNCTION inet_ntoa(bigint)
+RETURNS text AS $$
+SELECT CASE WHEN $1 > 4294967295 THEN NULL ELSE
+    ((($1::bigint >> 24) % 256) + 256) % 256 operator(pg_catalog.||) '.' operator(pg_catalog.||)
+    ((($1::bigint >> 16) % 256) + 256) % 256 operator(pg_catalog.||) '.' operator(pg_catalog.||)
+    ((($1::bigint >>  8) % 256) + 256) % 256 operator(pg_catalog.||) '.' operator(pg_catalog.||)
+    ((($1::bigint      ) % 256) + 256) % 256 END;
+$$ IMMUTABLE STRICT LANGUAGE SQL;

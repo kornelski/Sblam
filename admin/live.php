@@ -34,7 +34,7 @@ class LivePage extends AdminPage
 	 	return array(
 			'sysload' => sys_getloadavg(),
 			'lastposts' => $lastposts,
-			'processlist' => $pdo->query("show processlist")->fetchAll(PDO::FETCH_ASSOC),
+			'processlist' => $pdo->getProcesslist(),
 		);
 	}
 
