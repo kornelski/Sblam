@@ -273,7 +273,8 @@ class ServerRequest
     			'serverid'=>$sblampost->getInstallId(),
     		);
 		    $this->insertArray('posts_meta',$out,10);
-            $this->stored_id = $this->db->lastInsertId();
+            $this->stored_id = $this->db->lastInsertId('posts_meta_id_seq');
+            assert('$this->stored_id > 0');
 
 		    $out = array(
 		        'id'=>$this->stored_id,
