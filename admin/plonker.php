@@ -18,10 +18,10 @@ class PlonkerPage extends AdminPage
 	{
 		$pdo = $this->services->getDB();
 
-		$plonkerstats['total'] = $this->q1("/*maxtime=5*/SELECT count(*) from plonker",true);
-		$plonkerstats['totalnets'] = $this->q1("/*maxtime=10*/SELECT count(distinct ip>>10) from plonker",true);
+		$plonkerstats['total'] = $this->q1("/*maxtime=5*/SELECT count(*) FROM plonker",true);
+		$plonkerstats['totalnets'] = $this->q1("/*maxtime=10*/SELECT count(distinct ip>>10) FROM plonker",true);
 		$out = array();
-		foreach($pdo->query("/*maxtime20*/SELECT * from plonker order by spampoints desc,added desc,ip limit 100") as $row)
+		foreach($pdo->query("/*maxtime20*/SELECT * FROM plonker ORDER BY spampoints DESC,added DESC,ip LIMIT 100") as $row)
 		{
 			$out[] = $row;
 		}
@@ -29,12 +29,12 @@ class PlonkerPage extends AdminPage
 
 		$out = array();
 		foreach($pdo->query("/*maxtime20*/".
-		    "SELECT  ip,flags ,count(*) as  cnt,
-		        sum( spampoints ) as  spampoints,
-		        max( added ) as  added
+		    "SELECT min(ip) as ip, max(flags) as flags, count(*) as cnt,
+		        sum( spampoints ) as spampoints,
+		        max( added ) as added
 		     FROM plonker
-		     GROUP BY  ip >>10
-		     ORDER BY  cnt  DESC, spampoints,ip
+		     GROUP BY plonker.ip >>10
+		     ORDER BY count(*) DESC, spampoints,ip
 		     LIMIT 100") as $row)
 		{
 			$out[] = $row;
@@ -42,7 +42,7 @@ class PlonkerPage extends AdminPage
 		$plonkerstats['topranges'] = $out;
 
 		$out = array();
-		foreach($pdo->query("/*maxtime20*/SELECT * from plonker order by added desc limit 100") as $row)
+		foreach($pdo->query("/*maxtime20*/SELECT * FROM plonker ORDER BY added DESC LIMIT 100") as $row)
 		{
 			$out[] = $row;
 		}
