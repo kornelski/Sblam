@@ -44,7 +44,6 @@
 <li><a href="/admin/plonker">IP bans</a></li>
 <li><a href="/admin/score">Moderate</a></li>
 <li><a href="/admin/bayesadd">Train filter</a></li>
-<li><a href="/admin/atom">Autotrain</a></li>
 <li><a href="/admin/updatebayes">Update bayes</a></li>
 <li><a href="/admin/live">Live</a></li>
 <li><a href="/admin/apc">APC</a></li>
