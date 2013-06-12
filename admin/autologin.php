@@ -10,7 +10,7 @@ class AutologinPage extends AdminPage
 
 	function account($acc)
 	{
-		$apikey = $this->services->getDB()->query("SELECT apikey FROM accounts WHERE id=".intval($acc))->fetchAll();
+		$apikey = $this->services->getDB()->query('SELECT apikey FROM accounts WHERE id='.intval($acc))->fetchAll();
 		$apikey = reset($apikey);
 		$apikey = reset($apikey);
 		return $this->apikey($apikey);
