@@ -60,7 +60,7 @@ class ServerRequest
 	{
 		if (empty($_SERVER['CONTENT_TYPE']) || !preg_match('!^application/x-sblam\s*;\s*sig\s*=\s*([a-z0-9]{32})([a-z0-9]{32})(\s*;\s*compress\s*=\s*gzip)?\s*$!i',$_SERVER['CONTENT_TYPE'],$res))
 		{
-			throw new Exception("Niepoprawne zapytanie",400);
+			throw new ServerException("Niepoprawne zapytanie",400);
 		}
 
 		$compressed = !empty($res[3]);
@@ -71,7 +71,7 @@ class ServerRequest
 
 		if (md5($this->account->apikey . $data) !== $sig)
 		{
-			throw new Exception("Niepoprawny podpis danych lub dane uszkodzone podczas transferu",403);
+			throw new ServerException("Niepoprawny podpis danych lub dane uszkodzone podczas transferu",403);
 		}
 
         if ($compressed) $data = gzuncompress($data,300000);
@@ -185,7 +185,7 @@ class ServerRequest
 		if (count($out)>1)
 		{
 			d('checking for proxies');
-			$db = sblambaseconnect();
+			$db = sblambaseconnect(Server::getDefaultConfig());
 			$prep = $db->prepare("/*maxtime=1*/SELECT 1 FROM trustedproxies p JOIN dnscache d ON p.host = d.host WHERE d.ip = ?");
 			if (!$prep) throw new Exception("b0rked".implode(',',$db->errorInfo()));
 			foreach($out as $ip => $whatever)
