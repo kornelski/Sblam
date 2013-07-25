@@ -41,15 +41,6 @@ ip between inet_aton('224.0.0.0') and inet_aton('255.255.255.255');");
 
 		$pdo->exec("/*maxtime10*/INSERT into dnscache (host,ip) select t.host,r.ip FROM trustedproxies t left join dnscache d ON d.host = t.host join dnsrevcache r on t.host = r.host WHERE d.host is NULL;");
 
-		if (date("d")%1)
-		{
-			$pdo->exec("/*maxtime60*/DELETE from bayeswordsh where spam<4 and ham<2 and added < now() - interval 2 month limit 200000");
-		}
-		else
-		{
-			$pdo->exec("/*maxtime60*/DELETE from linkswordsh where spam<3 and ham<2 and added < now() - interval 2 month limit 100000");
-		}
-
 		$pdo->exec("DELETE from plonker WHERE ip BETWEEN  INET_ATON('192.168.0.0') AND INET_ATON('192.168.255.255')");
 
 		$pdo->exec("DELETE from plonker WHERE ip BETWEEN  INET_ATON('172.16.0.0' ) AND INET_ATON('172.31.255.255')");
@@ -60,6 +51,15 @@ ip between inet_aton('224.0.0.0') and inet_aton('255.255.255.255');");
 		set @minid = least((select id-40000 from posts_meta order by id desc limit 1),(select id+5000 from posts_meta order by id limit 1)); insert into posts_archive
 		select * from posts_meta left join posts_data on posts_meta.id = posts_data.id where posts_meta.id < @minid; delete from posts_meta where id < @minid;
 */
+		if (date("d")%1)
+		{
+			$pdo->exec("/*maxtime30*/DELETE from bayeswordsh where spam<4 and ham<2 and added < now() - interval 2 month limit 20000");
+		}
+		else
+		{
+			$pdo->exec("/*maxtime30*/DELETE from linkswordsh where spam<3 and ham<2 and added < now() - interval 2 month limit 10000");
+		}
+
 
 		return array('page_content'=>'ok');
 	}
