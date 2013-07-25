@@ -55,14 +55,15 @@ class MainPage extends AdminPage
 
         $moved = $this->services->getDB()->exec("/*maxtime710*/INSERT INTO postsarchive(id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,\"timestamp\",headers,cookies, session,host,hostip,\"path\",added,post,chcookie,worktime,account,profiling)
             SELECT
-posts_meta$suffix.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,\"timestamp\",headers,cookies,session,host,hostip,\"path\",
+posts_meta.id,spambayes,spamscore,spamcert,spamreason,manualspam,content,name,email,url,ip,\"timestamp\",headers,cookies,session,host,hostip,\"path\",
 added,post,chcookie,worktime,account,profiling
-                FROM posts_meta$suffix LEFT JOIN posts_data$suffix ON posts_meta$suffix.id = posts_data$suffix.id
-                WHERE posts_meta$suffix.id < $minid");
+                FROM posts_meta LEFT JOIN posts_data ON posts_meta.id = posts_data.id
+                WHERE posts_meta.id < $minid");
 
         if ($moved)
         {
-            $this->services->getDB()->exec("/*maxtime510*/DELETE FROM posts_meta$suffix WHERE id < $minid");
+            $this->services->getDB()->exec("/*maxtime10*/DELETE FROM posts_meta WHERE id < $minid");
+            $this->services->getDB()->exec("/*maxtime10*/DELETE FROM posts_data WHERE id < $minid");
         }
 
         $info['moved'] = $moved;
