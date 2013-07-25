@@ -62,7 +62,7 @@ class SblamTestSurbl extends SblamTestPost
 			} else d("$host not listed $res");
 		}
 
-		$finalscore = min(0.4 + $score/18, 1.5);
+		$finalscore = min(0.4 + $score/25, 1.5);
 
 		if ($score) return array($finalscore, ($score >= 13)?self::CERTAINITY_HIGH:self::CERTAINITY_NORMAL,"Linked sites in SURBL (".round($finalscore,1)." = $score)");
 		return NULL;
