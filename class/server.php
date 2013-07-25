@@ -386,6 +386,8 @@ class Server
 
 		$endtime = microtime(true);
 
+		if ($content == '' && $author=='') {$req->returnResult(1);}
+		else
 		if ($cert < 0.45 || abs($score) < 0.38) // .35 .22 is enough
 		{
 			$req->returnResult( ($score>0)?1:-1 );
