@@ -28,6 +28,7 @@ class SblamTestScalpel extends SblamTestPost
 
 	function testPost(ISblamPost $p)
 	{
+		$matched=array();
 		$score = 0;
 		$post = $p->getRawContent()."\n".$p->getAuthorName()."\n".$p->getAuthorEmail()."\n".$p->getAuthorURI();
 
@@ -35,11 +36,12 @@ class SblamTestScalpel extends SblamTestPost
 		{
 			if (preg_match($pattern[0], $post))
 			{
+				$matched[] = $pattern[0];
 				$score += $pattern[1];
 			}
 		}
 
-		if ($score) return array($score, self::CERTAINITY_NORMAL, "Exact spam matches");
+		if ($score) return array($score, self::CERTAINITY_NORMAL, "Exact spam matches (".implode(', ',$matched).")");
 	}
 
 	static function info()
