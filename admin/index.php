@@ -195,6 +195,7 @@ catch(Exception $e)
 {
 	header('HTTP/1.1 500 ERR');
 	header("Content-Type: text/plain;charset=UTF-8");
-	if (ini_get('display_errors')) echo $e; else echo "Error";
+	if (ini_get('display_errors')) echo $e; else echo "Error ".$e->getSourceLine();
+	error_log($e->getMessage()." in ".$e->getSourceFile().':'.$e->getSourceLine());
 	warn($e,"Died");
 }
