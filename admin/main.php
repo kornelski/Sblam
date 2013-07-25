@@ -73,7 +73,7 @@ added,post,chcookie,worktime,account,profiling
 	{
 	    if (isset($_POST['archive']))
 	    {
-	        $max = 50;
+	        $max = 5000;
 	        $moved_total = 0;
 	        while($max--)
 	        {
