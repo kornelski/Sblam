@@ -7,6 +7,7 @@ function warn($a,$b=NULL){trigger_error(print_r($a,true)." - $b");}
 if (!DEBUG)
 {
 	header("Content-Type:text/plain;charset=UTF-8");
+	ini_set('display_errors',0);
 }
 else
 {
@@ -38,13 +39,17 @@ try
 }
 catch(ServerException $e)
 {
+if (!headers_sent()){
 	header("HTTP/1.1 ".$e->getCode()." ".$e->getMessage());
 	header("Content-Type: text/plain;charset=UTF-8");
+}
 	die($e->getMessage());
 }
 catch(Exception $e)
 {
+if (!headers_sent()){
     header("HTTP/1.1 500 err");
-	header("Content-Type: text/plain;charset=UTF-8");
-	if (ini_get('display_errors')) die($e->getMessage()); else die("Error");
+	header("Content-Type: text/plain;charset=UTF-8");}
+	if (ini_get('display_errors')) echo $e; else echo "Error";
+	error_log($e->getMessage());//." in ".$e->getSourceFile().':'.$e->getSourceLine());
 }
