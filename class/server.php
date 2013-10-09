@@ -170,7 +170,7 @@ class ServerRequest
 			$h = 'HTTP_'.$h;
 			if (isset($headers[$h]) && preg_match_all('!\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}!',$headers[$h],$t)) // order IS important for security
 			{
-				foreach($t[0] as $ip) if (!isset($out[$ip])) $out[$ip] = true;
+				foreach(array_reverse($t[0]) as $ip) if (!isset($out[$ip])) $out[$ip] = true;
 			}
 		}
 

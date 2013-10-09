@@ -137,6 +137,7 @@ class SblamTestSpamvertises extends SblamTestPost
 		{
 			$r = array(new SblamURI('http://'.$r[2].'/'), $r[1]); // it's a hack to re-use SblamURI logic
 			$this->addURI($uris, $r[0], '@');
+			$r[1] = str_replace('.','',$r[1]); // gmail
 			$this->addURI($uris, $r[0], preg_replace('/\d+/','D',$r[1]).'@');
 			return true;
 		}
