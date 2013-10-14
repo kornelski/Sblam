@@ -1,6 +1,11 @@
 #http://lxr.mozilla.org/mozilla/source/netwerk/dns/src/effective_tld_names.dat?raw=1
 #http://spamcheck.freeapp.net/two-level-tlds
 #list of domains that register subdomains and have no control over their content
+gmail.com
+yahoo.com
+hotmail.com
+outlook.com
+yandex.ru
 00bp.com
 1talk.net
 2000.hu
