@@ -2,7 +2,7 @@
 
 class SblamHTTP implements ISblamHTTP
 {
-    private $host,$path='/',$method='GET', $content_type, $payload, $timeout=5;
+    private $host,$port=80,$path='/',$method='GET', $content_type, $payload, $timeout=5;
 
     function setPost($payload, $content_type)
     {
@@ -34,6 +34,11 @@ class SblamHTTP implements ISblamHTTP
         $this->host = $host; return $this;
     }
 
+    function setPort($port)
+    {
+        $this->port = $port; return $this;
+    }
+
     function setTimeout($timeout)
     {
         if (!is_numeric($timeout)) throw new Exception("Invalid timeout $timeout");
@@ -59,7 +64,7 @@ class SblamHTTP implements ISblamHTTP
 		    $postdata .= "\r\n";
 	    }
 	    d($postdata,"Sending request");
-		$fp=@fsockopen($this->host, 80, $err1, $err2, $this->timeout);
+		$fp=@fsockopen($this->host, $this->port, $err1, $err2, $this->timeout);
 		if (!$fp) {
 		    warn('cant connect');return NULL;
 		}
