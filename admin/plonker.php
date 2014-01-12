@@ -59,7 +59,7 @@ class PlonkerPage extends AdminPage
 		return $plonkerstats;
 	}
 
-	function blocklist($min = 6500)
+	function blocklist($min = 7500)
 	{
 		$out = "# HTTP spam sources identified by http://sblam.com.\n# Generated ".date('Y-m-d H:i:s').
 		     "\n# This is list of HTML forms spammers, not suitable for blocking e-mail spam!\n";
@@ -69,8 +69,8 @@ class PlonkerPage extends AdminPage
 		$n=0;
 		foreach($this->services->getDB()->query("/*maxtime20*/".
 		    "SELECT ip FROM plonker
- 		     WHERE ((added > now() - interval 1 month AND spampoints > $min)
-		         OR (added > now() - interval 2 month AND spampoints > $two_month_min))
+		     WHERE ((added > now() - interval 1 week AND spampoints > $min)
+		         OR (added > now() - interval 1 month AND spampoints > $two_month_min))
 		     AND ip > (11<<24)
 		     ORDER BY ip") as $r)
 		{
