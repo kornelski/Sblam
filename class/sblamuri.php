@@ -100,10 +100,8 @@ class SblamURI
   {
     	if (self::$tlds)
   		{
-  			//d(self::$tlds->check($host),'check returns');
   			$level = self::$tlds->check($host); if ($level === NULL) return NULL;
   			$level = max(1,$level)+1;
-  			//d("Looked up level $level for $host");
   		}
   		else
   		{
@@ -111,7 +109,6 @@ class SblamURI
   			$parts = array_reverse(explode('.',$host));
   			if (!empty($parts[1]) && strlen($parts[1])<=3) $level = 3; else $level = 2;
   		}
-		d($level,"$host tld+1");
   		return $level;
   }
 
@@ -237,7 +234,6 @@ class SblamURI
 	private static function savebyaddrcache($ip,$host)
 	{
 		if (!self::$db) return;
-		d("Saving resolution of $ip -> $host");
 
 		if (is_array($host)) $host = reset($host);
 

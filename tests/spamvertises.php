@@ -60,7 +60,6 @@ class SblamTestSpamvertises extends SblamTestPost
 			$hampop += max(0,$ham-$spam) * $ham/($ham + 3*$spam);
 			$spamness += $spam/($ham+$spam) - $ham/2/($ham+$spam);
 			$maxspamness = max($maxspamness, $spam/($ham+$spam));
-			$maxspamness = max($maxspamness,$spam/($ham+$spam));
 		}
 
 		$hampop = max(0, $hampop - $spampop);

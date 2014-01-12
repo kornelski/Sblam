@@ -26,14 +26,12 @@ class SblamTestBayes extends SblamTestPost
 			{
 				if (function_exists('apc_add') && !apc_add('spambayesaddlock',1,1))
 				{
-					warn('skipping add due to apc lock');
 					return;
 				}
 
 				$load = sys_getloadavg();
 				if ($load[0]>1)
 				{
-					warn('skipping add due to load ' . $load[0] . '/'. $load[2]);
 					return;
 				}
 			}
