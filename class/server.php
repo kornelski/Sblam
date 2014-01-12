@@ -58,7 +58,8 @@ class ServerRequest
 
 	private function decodeData($data)
 	{
-		if (empty($_SERVER['CONTENT_TYPE']) || !preg_match('!^application/x-sblam\s*;\s*sig\s*=\s*([a-z0-9]{32})([a-z0-9]{32})(\s*;\s*compress\s*=\s*gzip)?\s*$!i',$_SERVER['CONTENT_TYPE'],$res))
+		$content_type = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : @$_SERVER['HTTP_CONTENT_TYPE'];
+		if (!preg_match('!^application/x-sblam\s*;\s*sig\s*=\s*([a-z0-9]{32})([a-z0-9]{32})(\s*;\s*compress\s*=\s*gzip)?\s*$!i', $content_type, $res))
 		{
 			throw new ServerException("Niepoprawne zapytanie",400);
 		}
