@@ -164,7 +164,7 @@ class BayesStats extends BayesBase
     {
         list($totalspam,$totalham) = $this->getTotalPosts();
 
-        $res = $this->changeHashes(array($hash), "ham=10+(ham + ((spam/$totalspam + ham/$totalham)/2)*$totalham)/2, spam=10+(spam + ((spam/$totalspam + ham/$totalham)/2)*$totalspam)/3");
+        $res = $this->changeHashes(array($hash), "ham=10+(ham + ((spam/$totalspam + ham/$totalham)/2)*$totalham)*0.6, spam=10+(spam + ((spam/$totalspam + ham/$totalham)/2)*$totalspam)*0.5");
 
         if (!count($res)) throw new Exception("Unable to find word");
         return reset($res);
