@@ -25,11 +25,9 @@ class SblamTestHttp extends SblamTestPost
         if (($cnt = count($p->getAuthorIPs())) > 4) $out[] = array(($cnt-2)/10, $cnt>7?self::CERTAINITY_HIGH:self::CERTAINITY_NORMAL, "Insane number of relays ($cnt)");
 
         // Unpatched IE!?
-        if (!empty($h["HTTP_USER_AGENT"]) && in_array($h['HTTP_USER_AGENT'],
-            array('Mozilla/4.0 (compatible; MSIE 6.0; Windows 98)',
-                        'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)')
-            ))
+        if (!empty($h["HTTP_USER_AGENT"]) && preg_match('/MSIE [456]\.[0-9]; Windows (?:9|NT 5)/', $h['HTTP_USER_AGENT'])) {
             $out[] = array(0.3,self::CERTAINITY_NORMAL,"Unpatched IE");
+	}
 
         // Browsers almost always send these
         if (empty($h["HTTP_ACCEPT"])) $out[] = array(0.7,self::CERTAINITY_NORMAL,"Missing Accept header");
