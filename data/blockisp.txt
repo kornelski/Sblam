@@ -12,7 +12,11 @@ airtelbroadband.in
 alestra.net.mx
 amazonaws.com
 ameritech.net
+anonine.com
 aprilgroup.ru
+as13285.net
+as15003.net
+as55666.net
 as5577.net
 asianet.co.th
 astral.ro
@@ -28,10 +32,12 @@ broadband.corbina.ru
 bvnet.ro
 cal.pl
 camfrog.tc#vps
+cantv.net
 charter.com
 cloud-ips.com
 cnuninet.com
 codetel.net.do
+colocrossing.com
 comcast.net
 corbina.ru
 cox.net
@@ -45,6 +51,7 @@ dehost.pl
 dimenoc.com
 dslextreme.com
 dyn.idknet.com
+e-ring.pl
 eastlink.ca
 edu.tw
 elasticbend.com
@@ -102,6 +109,7 @@ kimsufi.com
 krypt.com
 kyivstar.net
 layeredtech.com
+leaseweb.com
 linode.com
 linuxpl.com
 ltdomains.com
@@ -156,7 +164,6 @@ rescom.ru
 rima-tde.net
 rogers.com
 rosebudsolutions.com
-rr.com
 rzepkamm.com#vps
 saudi.net.sa
 sbc.com
@@ -183,12 +190,14 @@ smart-dns.net
 sovam.net.ua
 spacegate.com.ua
 speedy.com.ar
+sprintdatacenter.pl
 starnet.md
 starnet.ru
 startdedicated.com
 static.asianet.co.th
 steadfastdns.net
 steephost.com
+stratoserver.net
 superhost.pl#vps
 susu.ac.ru
 swbell.net
