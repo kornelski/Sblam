@@ -190,7 +190,7 @@ class SblamTestBayes extends SblamTestPost
 		$words = NULL;
 
 		$final = array();
-		foreach($tmp as $v => $ignore)
+		foreach($tmp as $v => $ignoredword)
 		{
 			if (strlen($v) >= 2 && preg_match('![a-z\pL]!u',$v) && !isset($ignore[$v]))
 			{
