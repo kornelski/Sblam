@@ -46,7 +46,15 @@ class SblamTestHttp extends SblamTestPost
             $out[] = array(0.2,self::CERTAINITY_NORMAL,"Invalid TE header");
 
         // Googlebot doesn't post comments!
-        if (!empty($h['HTTP_USER_AGENT']) && preg_match('!Googlebot[/ -]|Slurp|Wget/|W3C_Validator|Advertise\.com|nicebot|MMCrawler/|MSIECrawler|ia_archiver|WebaltBot/|nutbot\.com|\+http://search\.!',$h['HTTP_USER_AGENT'])) $out[] = array(1,self::CERTAINITY_NORMAL,"Bots don't post comments");
+        if (!empty($h['HTTP_USER_AGENT']) && preg_match('!Googlebot[/ -]|Slurp|Wget/|W3C_Validator|Advertise\.com|nicebot|MMCrawler/|MSIECrawler|ia_archiver|WebaltBot/|nutbot\.com|\+http://search\.!',$h['HTTP_USER_AGENT'])) {
+            $out[] = array(1,self::CERTAINITY_NORMAL,"Bots don't post comments");
+        }
+
+        // Headless browsers no thanks
+        if (!empty($h['HTTP_USER_AGENT']) && preg_match('!PhantomJS|CasperJS!',$h['HTTP_USER_AGENT'])) {
+            $out[] = array(1,self::CERTAINITY_HIGH,"Nice try, PhantomJS");
+        }
+
         if (!empty($h['HTTP_USERAGENT']) ||
 				(!empty($h['HTTP_USER_AGENT']) && preg_match('!^User-Agent!i',$h['HTTP_USER_AGENT']))
                 ) $out[] = array(1,self::CERTAINITY_NORMAL,"Really badly written bot");
