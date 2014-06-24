@@ -855,6 +855,7 @@ experts-comptables.fr
 express.aero
 extra.hu
 f.se
+facebook.com
 fam.pk
 far.br
 fareast.ru
@@ -995,6 +996,7 @@ gliding.aero
 gliwice.pl
 glogow.pl
 gloppen.no
+gmail.com
 gmina.pl
 gniezno.pl
 go.cr
@@ -1024,6 +1026,7 @@ gobiernoelectronico.ar
 gok.pk
 gol.no
 gon.pk
+goo.gl
 goodforum.net
 google.ca
 google.com
@@ -1294,6 +1297,7 @@ hornindal.no
 horten.no
 hotel.hu
 hotel.lk
+hotmail.com
 hoyanger.no
 hoylandet.no
 hs.kr
@@ -2319,6 +2323,7 @@ ostrowiec.pl
 ostrowwlkp.pl
 otc.au
 other.nf
+outlook.com
 overhalla.no
 ovh.org
 ovp.pl
@@ -2366,6 +2371,7 @@ pi.it
 piacenza.it
 pila.pl
 pilot.aero
+pinterest.com
 pisa.it
 pistoia.it
 pisz.pl
@@ -3250,11 +3256,13 @@ xn--zf0ao64a.tw
 xooit.com
 xz.cn
 y.se
+yahoo.com
 yakutia.ru
 yamagata.jp
 yamaguchi.jp
 yamal.ru
 yamanashi.jp
+yandex.ru
 yaroslavl.ru
 yekaterinburg.ru
 yk.ca
