@@ -179,7 +179,9 @@ class SblamTestBayes extends SblamTestPost
 
 		$c = count($words); if (!$c) return array();
 
-		$tmp = array($words[0] => true);
+		array_unshift($words, '^');
+
+		$tmp = array();
 		for($i=1;$i<$c;$i++)
 		{
 			$tmp[ $words[$i] ] = true;
