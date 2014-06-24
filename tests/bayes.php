@@ -41,12 +41,39 @@ class SblamTestBayes extends SblamTestPost
 		}
 	}
 
+	private function extractWordsFromHeaders(ISblamPost $p) {
+		$words = array();
+
+		$headers = $p->getHeaders();
+		foreach($headers as $name => $val) {
+			if (!preg_match('/^HTTP_(?!REFERER|HOST|ORIGIN|CACHE|CONNECTION|X_FORWARD|X_REAL|X_CLIENT|CONTENT|PRAGMA|ACCEPT)/', $name)) continue;
+			$words[] = "$name: $val";
+		}
+
+		$ua = isset($headers['HTTP_USER_AGENT']) ? preg_replace('/(\d)[.\d]+/','\\1', $headers['HTTP_USER_AGENT']) : 'no-ua';
+		$words[] = $ua;
+
+		$words[] = $ua . (isset($headers['HTTP_ACCEPT']) ? $headers['HTTP_ACCEPT'] : 'no-a');
+		$words[] = $ua . (isset($headers['HTTP_ACCEPT_LANGUAGE']) ? $headers['HTTP_ACCEPT_LANGUAGE'] : 'no-al');
+		$words[] = $ua . (isset($headers['HTTP_ACCEPT_ENCODING']) ? $headers['HTTP_ACCEPT_ENCODING'] : 'no-ae');
+		$words[] = $ua . (isset($headers['HTTP_ACCEPT_CHARSET']) ? $headers['HTTP_ACCEPT_CHARSET'] : 'no-ac');
+		$words[] = $ua . (isset($headers['HTTP_TE']) ? $headers['HTTP_TE'] : 'no-te') .
+				(isset($headers['HTTP_PRAGMA']) ? $headers['HTTP_PRAGMA'] : 'no-p').
+				(isset($headers['HTTP_CACHE_CONTROL']) ? $headers['HTTP_CACHE_CONTROL'] : 'no-cc');
+		$words[] = $ua . (isset($headers['HTTP_CONNECTION']) ? $headers['HTTP_CONNECTION'] : 'no-c') .
+				(isset($headers['HTTP_EXPECT']) ? $headers['HTTP_EXPECT'] : 'no-e') .
+				(isset($headers['HTTP_VIA']) ? $headers['HTTP_VIA'] : 'no-v');
+
+		return $words;
+	}
+
 	function testPost(ISblamPost $p)
 	{
 		$spammiestword = ''; $spammiestwordnudge = 0;
 
 		// test usual post content
-		$postwords = $this->extractWordsFromPost($p);
+		$postwords = array_merge($this->extractWordsFromHeaders($p), $this->extractWordsFromPost($p));
+
 		list($score,$cert, $newword, $newscore) = $this->db->testWords($postwords);
 		if ($newscore > $spammiestwordnudge) {$newscore = $spammiestwordnudge; $spammiestword = $newword;}
 
@@ -94,7 +121,7 @@ class SblamTestBayes extends SblamTestPost
 	function addPost(ISblamPost $p, $isspam)
 	{
 		/** @todo add signature as well, but only if its spammy */
-		return $this->db->add($this->extractWordsFromPost($p),$isspam);
+		return $this->db->add(array_merge($this->extractWordsFromHeaders($p), $this->extractWordsFromPost($p)), $isspam);
 	}
 
 	function addText($txt, $isspam, $howmuch=1)
