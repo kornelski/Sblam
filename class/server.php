@@ -236,6 +236,9 @@ class ServerRequest
 
 		echo $n;
 		@ob_flush();flush();
+		if (function_exists('fastcgi_finish_request')) {
+			fastcgi_finish_request();
+		}
 	}
 
 	private function insertArray($table,array $out, $maxtime=20)
