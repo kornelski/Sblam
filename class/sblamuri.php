@@ -238,7 +238,11 @@ class SblamURI
 		if (is_array($host)) $host = reset($host);
 		if (is_array($ip)) $ip = reset($ip);
 
-		if (!self::$db->exec(sprintf("/*maxtime10*/REPLACE INTO dnsrevcache (ip,host) VALUES('%u','%s')",ip2long($ip),addslashes(strtolower($host))))) warn(self::$db->errorInfo());
+		try {
+			if (!self::$db->exec(sprintf("/*maxtime10*/REPLACE INTO dnsrevcache (ip,host) VALUES('%u','%s')",ip2long($ip),addslashes(strtolower($host))))) warn(self::$db->errorInfo());
+		} catch(Exception $e) {
+			warn($e, "failed to add to cache");
+		}
 	}
 
 	static function gethostbynamel($name)

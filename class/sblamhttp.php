@@ -70,7 +70,7 @@ class SblamHTTP implements ISblamHTTP
 		}
 		stream_set_timeout($fp, $this->timeout);
 
-		if (!fwrite($fp, $postdata, strlen($postdata))) {
+		if (!@fwrite($fp, $postdata, strlen($postdata))) {
 		    warn('cant upload');return NULL;
 		}
 

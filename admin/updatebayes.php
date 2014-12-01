@@ -28,7 +28,7 @@ class UpdatebayesPage extends AdminPage
 
     function is_active()
     {
-        return (apc_fetch('update_active') > time()-240);
+        return (apc_fetch('update_active') > time()-40);
     }
 
     function ended()
