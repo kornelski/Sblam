@@ -19,12 +19,12 @@ class SblamTestDeDupe extends SblamTestPost
 		if (strlen($text) < 40) $text .= $p->getAuthorURI();
 		if (strlen($text) < 40) $text .= $p->getAuthorEmail();
 		if (strlen($text) < 40) $text .= $p->getAuthorName();
-		if (strlen($text) < 20) $text .= $p->getAuthorIP();
 		if (strlen($text) < 10)
 		{
 			$this->checksum=NULL;
 			return;
 		}
+		if (strlen($text) < 20) $text .= $p->getAuthorIP();
 
 		$text = preg_replace(array('/[.,\s!:;()-]+/','/([a-f0-9]{1,3}[a-f]{1,6}[0-9]{1,6})+/','/\d\d{1,8}/'),array(' ','H','D'),strtolower($text));
 		d($text,'normalized text');
