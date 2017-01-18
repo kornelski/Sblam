@@ -80,10 +80,9 @@ class SblamTestChallenge extends SblamTestPost
                 }
             }
         }
-        else $score = -3;
 
         if ($score < 0) return array(-$score/5, self::CERTAINITY_LOW, "Forged JS challenge ($score)");
-        if ($score > 0) return array(-$score/11, self::CERTAINITY_NORMAL, "Successful JS challenge ($score; age $age; write $writetime)");
+        if ($score > 0) return array(-$score/20, self::CERTAINITY_LOW, "Successful JS challenge ($score; age $age; write $writetime)");
 
         return NULL; // there are too many ways in which JS challenge can fail, so can't penalize for that!
     }
