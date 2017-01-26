@@ -95,9 +95,15 @@ class SblamTestThrottle extends SblamTestPost
 		$acc = new ThrottleAccumulator();
 		$acc->antiConcurrency($p);
 
+		$isRegistration = false !== strpos($p->getPath(), 'mode=register');
+
 		foreach($p->getAuthorIPs() as $ip)
 		{
 			if (apc_fetch('ip-ban:'.$ip) > time()) $acc->kill();
+
+			if ($isRegistration) {
+				$acc->increment('ip.register', $ip, 3, 9, 6*60);
+			}
 
 			$acc->increment("ip.sec",$ip, 2, 3, 10/60);
 			$acc->increment("ip",$ip, 15, 38, 60);
