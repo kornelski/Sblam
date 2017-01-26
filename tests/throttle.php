@@ -114,6 +114,15 @@ class SblamTestThrottle extends SblamTestPost
 		{
 			$acc->increment("email",$email, 8, 40, 10*60);
 			$acc->increment("email.short",$email, 5, 15, 5);
+
+			$domain = preg_replace('/^.*@/', '', $email);
+
+			if ($isRegistration) {
+				$acc->increment('email.register', $email, 2, 5, 9*60);
+				if ($domain) {
+					$acc->increment('email.domain.register', $domain, 10, 25, 9*60);
+				}
+			}
 		}
 		if ($name = $p->getAuthorName())
 		{
