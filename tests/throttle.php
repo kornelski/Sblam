@@ -88,12 +88,23 @@ class SblamTestThrottle extends SblamTestPost
 {
 	protected $accumulator;
 
-
 	function preTestPost(ISblamPost $p)
 	{
-
 		$acc = new ThrottleAccumulator();
 		$acc->antiConcurrency($p);
+
+		$mainIP = $p->getAuthorIP();
+		$authorEmail = $p->getAuthorEmail();
+		if ($mainIP && $authorEmail) {
+			$lastEmailKey = "lastemail:$mainIP";
+
+			if ($lastEmail = apc_fetch($lastEmailKey)) {
+				if ($lastEmail != $authorEmail) {
+					$acc->increment("ip.emailchange", $mainIP, 3, 9, 60);
+				}
+			}
+			apc_store($lastEmailKey, $authorEmail, 2*3600);
+		}
 
 		$isRegistration = false !== strpos($p->getPath(), 'mode=register');
 
