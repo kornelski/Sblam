@@ -118,13 +118,13 @@ class SblamTestThrottle extends SblamTestPost
 
 			$acc->increment("ip.sec",$ip, 2, 3, 10/60);
 			$acc->increment("ip",$ip, 15, 38, 60);
-			$acc->increment("ip.day",$ip, 7*15, 7*38, 24*60);
-			$acc->increment("ip.range",ip2long($ip)>>8, 20*10, 20*30, 60);
+			$acc->increment("ip.day",$ip, 6*15, 6*38, 24*60);
+			$acc->increment("ip.range",ip2long($ip)>>8, 20*10, 20*30, 120);
 		}
 		if ($email = $p->getAuthorEmail())
 		{
-			$acc->increment("email",$email, 8, 40, 10*60);
-			$acc->increment("email.short",$email, 5, 15, 5);
+			$acc->increment("email",$email, 5, 40, 10*60);
+			$acc->increment("email.short",$email, 5, 15, 10);
 
 			$domain = preg_replace('/^.*@/', '', $email);
 
@@ -150,8 +150,8 @@ class SblamTestThrottle extends SblamTestPost
 		}
 		foreach($domains as $domain => $x)
 		{
-			$acc->increment("link.domain.short",$domain, 15, 25, 20);
-			$acc->increment("link.domain",$domain, 35, 85, 4*60);
+			$acc->increment("link.domain.short",$domain, 15, 25, 40);
+			$acc->increment("link.domain",$domain, 35, 85, 5*60);
 		}
 		$this->accumulator = $acc;
 	}
