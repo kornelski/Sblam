@@ -176,7 +176,7 @@ class ServerRequest
 
 		foreach($out as $ip => $whatever)
 		{
-			if (self::isPrivateOrReservedIP($ip))
+			if (self::isPrivateOrReservedIP($ip) || $ip === $_SERVER['REMOTE_ADDR'])
 			{
 				//d($ip,'Unroutable IP - dropping');
 				unset($out[$ip]);
