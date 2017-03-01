@@ -197,11 +197,6 @@ class ServerRequest
 					d($ip,'found to be a trusted proxy');
 					unset($out[$ip]);
 				}
-				else
-				{
-					d($ip,'not a trusted proxy, bye!');
-					break;
-				}
 			}
 		}
 		return array_keys($out);
