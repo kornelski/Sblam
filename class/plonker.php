@@ -85,9 +85,15 @@ class Plonker
 		if (is_array($rev)) {warn($rev,"gethostbyaddr returned array!?"); $rev = reset($rev);}
 		if (!$rev) return 3;
 
-		if (preg_match('/(^|[.-])(vp[sn]|srv)[.\d-]|(^|\.)(colo|dedi?)[-.]|dedic|resell|serv(er|[.\d-])|^ns\d*\.|^mail\d*\.|multicast|invalid|unknown/',$rev)) return 2;
+		$digits = preg_replace('/[^0-9]/','',$rev);
+		if (!$digits) return 3;
+
+		if (preg_match('/(^|[.-])(vp[sn]|srv)[.\d-]|(^|\.)(colo|dedi?)[-.]|dedica|resell|serv(er|[.\d-])|^ns\d*\.|^mail\d*\.|multicast|invalid|unknown/',$rev)) return 2;
 		if (preg_match('/internetdsl\.|static/',$rev) || preg_match('/^[^\d]+$/',$rev) || strlen($rev) < 10) return 1.5;
-		if (preg_match('/^nat[\d.-]|cache|proxy|gprs[^a-z]|dynamic|\.dhcp\.|\.sta\.|ppp[\d.-]|\.dyn\.|(^|[.-])adsl[.0-9-]/',$rev)) return 0.8;
+		if (preg_match('/^nat[\d.-]|cache|proxy|^tor-|^nat\d*-|torexit|gprs[^a-z]|dynamic|\.(?:dhcp|pool|sta)\.|ppp[\d.-]|\.dyn\.|(^|[.-])adsl[.0-9-]/',$rev)) return 0.8;
+
+		if (strlen($digits) < 4) return 2;
+
 		return 1;
 	}
 
